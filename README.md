@@ -3,8 +3,8 @@ Polly is a wrapper package of matplotlib that can easily generate plots charts a
 
 ## How to use it?
 Should be something as easy as:
-'''
+```
 polly.plot2dbar(somefile.csv)
-'''
+```
 To be finished...
 
