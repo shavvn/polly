@@ -2,74 +2,13 @@
 This file is used to generate graphs
 First I'll build up the basics and then figure out a general way to do it...
 """
-import os
+import polly
 import csv
 import numpy as np
 from matplotlib import pyplot
 
 
-class Pylot:
-    """
-    A base class specify interfaces
-    """
-    def __init__(self, *args, **kwargs):
-        """
-        set default params and user defined ones
-        :return: self.params
-        """
-        # have a list of default params, change them if necessary
-        self.params = {
-            "title" : "Default Title",
-            "width" : 0.4,
-            "data" : None,
-        }
-        self.plot_type = "Default"
-        self.set_params(args, kwargs)
-        return self.params
-
-    def get_params(self):
-        return self.params
-
-    def parse_csv(self, fname):
-        """
-        :param fname: the csv name to be parsed
-        :return: params that could be used to plot
-        """
-        raise NotImplementedError("Subclass must implement abstract method")
-
-    def set_params(self, *args, **kwargs):
-        if len(args) == 1: # pass a file or data structure
-            if ".csv" in args: # a csv file
-                self.parse_csv(args)
-            else:
-                if isinstance(args, dict): # a dict instance
-                    for key, value in args.items():
-                        if key in sefl.params:
-                            self.params[key] = value
-        elif len(args) == 0:
-            pass
-        else:
-            print ("shouldn't have more than 1 args")
-            exit(1)
-        # process kwargs
-        for key, value in kwargs.items():
-            if key in self.params:
-                self.params[key] = value
-
-    # add new params
-    def add_params(self, **kwargs):
-        for key, value in kwargs.items():
-            self.params[key] = value
-
-    def plot(self):
-        """
-        Abstract method, Subclass must implement this
-        :return: None
-        """
-        raise NotImplementedError("Subclass must implement abstract method")
-
-
-class Plot2DBar(Pylot):
+class Plot2DBar(polly.Polly):
     def __init__(self, *args, **kwargs):
         self.params = super(Plot2DBar, self).__init__(args, kwargs)
         self.params = {

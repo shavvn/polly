@@ -1,11 +1,6 @@
-import os
-import csv
-import numpy as np
-from matplotlib import pyplot
+
 from abc import ABCMeta, abstractmethod
 
-"""
-"""
 class Polly(object):
     """
     A base class specify interfaces and do basic stuff such as init/set params
@@ -24,10 +19,8 @@ class Polly(object):
         self.plot_type = "Default"
         self.set_params(args, kwargs)
 
-
     def get_params(self):
         return self.params
-
 
     def set_params(self, *args, **kwargs):
         if len(args) == 1: # pass a file or data structure
@@ -52,8 +45,7 @@ class Polly(object):
     def add_params(self, **kwargs):
         for key, value in kwargs.items():
             self.params[key] = value
-    
-    
+
     @abstractmethod
     def plot(self):
         """
