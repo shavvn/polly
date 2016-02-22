@@ -1,5 +1,5 @@
+from abc import abstractmethod
 
-from abc import ABCMeta, abstractmethod
 
 class Polly(object):
     """
@@ -12,9 +12,9 @@ class Polly(object):
         """
         # have a list of default params, change them if necessary
         self.params = {
-            "title" : "Default Title",
-            "width" : 0.4,
-            "data" : None,
+            "title": "Default Title",
+            "width": 0.4,
+            "data": None,
         }
         self.plot_type = "Default"
         self.set_params(args, kwargs)
@@ -23,13 +23,13 @@ class Polly(object):
         return self.params
 
     def set_params(self, *args, **kwargs):
-        if len(args) == 1: # pass a file or data structure
-            if ".csv" in args: # a csv file
+        if len(args) == 1:  # pass a file or data structure
+            if ".csv" in args:  # a csv file
                 self.parse_csv(args)
             else:
-                if isinstance(args, dict): # a dict instance
+                if isinstance(args, dict):  # a dict instance
                     for key, value in args.items():
-                        if key in sefl.params:
+                        if key in self.params:
                             self.params[key] = value
         elif len(args) == 0:
             pass
@@ -41,8 +41,12 @@ class Polly(object):
             if key in self.params:
                 self.params[key] = value
 
-    # add new params
     def add_params(self, **kwargs):
+        """
+        add new parameters from a dict structure
+        :param kwargs: key and value pairs
+        :return: nothing... params should be updated
+        """
         for key, value in kwargs.items():
             self.params[key] = value
 
@@ -55,10 +59,9 @@ class Polly(object):
         raise NotImplementedError("Subclass must implement abstract method")
     
     @abstractmethod
-    def parse_csv(self, fname):
+    def parse_csv(self, file_name):
         """
-        :param fname: the csv name to be parsed
+        :param file_name: the csv name to be parsed
         :return: params that could be used to plot
         """
         raise NotImplementedError("Subclass must implement abstract method")
-
