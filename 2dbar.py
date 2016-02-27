@@ -28,3 +28,18 @@ def parse_csv(csv_name):
             params.update({"title": meta_info[0]})
         # got title so far.
     return params
+
+    
+def plot(params):
+    ind = np.arange(len(self.params["xticks"]))
+    ax = pyplot.subplot(111)
+    pyplot.bar(ind, height=self.params["data"], color="blue")
+    pyplot.title(self.params["title"])
+    pyplot.xlabel(self.params["xlabel"])
+    pyplot.xticks(ind+self.params["width"]/2, self.params["xticks"])
+    pyplot.ylabel(self.params["ylabel"])
+    pyplot.yticks(self.params["yticks"])
+    pyplot.savefig("sample.png")
+    pyplot.close()
+    return
+    
