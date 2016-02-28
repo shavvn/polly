@@ -3,6 +3,7 @@ generate 2d bar graphs..
 Still not sure if I should do it in OOP, but fuck it... do this first
 """
 import csv
+import argparse
 
 __author__ = "Shang Li"
 
@@ -42,4 +43,18 @@ def plot(params):
     pyplot.savefig("sample.png")
     pyplot.close()
     return
+    
+    
+if __name__ == "__main__":
+    # TODO this argparsing process should be general
+    args_parser = argparse.ArgumentParser(description="take input to plot")
+    args_parser.add_argument("--interval_file", help="the name of the interval output csv file, ignore if not desired",
+                             default="intervals.csv")
+    args_parser.add_argument("--output", help="output directory of all shit", default="./output/")
+    args_parser.add_argument("--input_dir", help="input dir contains all tsv files to be processed",
+                             default="../Play_Store_100k/")
+    args_parser.add_argument("--list_file", help="input file contains list of file dir + names",
+                             default="badapps_google.txt")
+    args_parser.add_argument("--input_name", help="single input tsv file")
+    
     
