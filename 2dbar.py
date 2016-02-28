@@ -32,14 +32,14 @@ def parse_csv(csv_name):
 
     
 def plot(params):
-    ind = np.arange(len(self.params["xticks"]))
+    ind = np.arange(len(params["xticks"]))
     ax = pyplot.subplot(111)
-    pyplot.bar(ind, height=self.params["data"], color="blue")
-    pyplot.title(self.params["title"])
-    pyplot.xlabel(self.params["xlabel"])
-    pyplot.xticks(ind+self.params["width"]/2, self.params["xticks"])
-    pyplot.ylabel(self.params["ylabel"])
-    pyplot.yticks(self.params["yticks"])
+    pyplot.bar(ind, height=params["data"], color="blue")
+    pyplot.title(params["title"])
+    pyplot.xlabel(params["xlabel"])
+    pyplot.xticks(ind+params["width"]/2, params["xticks"])
+    pyplot.ylabel(params["ylabel"])
+    pyplot.yticks(params["yticks"])
     pyplot.savefig("sample.png")
     pyplot.close()
     return
@@ -47,14 +47,14 @@ def plot(params):
     
 if __name__ == "__main__":
     # TODO this argparsing process should be general
-    args_parser = argparse.ArgumentParser(description="take input to plot")
-    args_parser.add_argument("--interval_file", help="the name of the interval output csv file, ignore if not desired",
-                             default="intervals.csv")
-    args_parser.add_argument("--output", help="output directory of all shit", default="./output/")
-    args_parser.add_argument("--input_dir", help="input dir contains all tsv files to be processed",
-                             default="../Play_Store_100k/")
+    # So do it here, then move it to polly maybe..
+    args_parser = argparse.ArgumentParser(description="take input to plot, either a file, or something else...")
+    args_parser.add_argument("--csv_files", help="the name of the input csv file, needs to have same format as sample",
+                             default="2d_bar_sample.csv")
+    args_parser.add_argument("--output_dir", help="output directory of all shit", default="./output/")
+    args_parser.add_argument("--input_dir", help="input dir contains all csv files to be processed",
+                             default="./input/")
     args_parser.add_argument("--list_file", help="input file contains list of file dir + names",
-                             default="badapps_google.txt")
-    args_parser.add_argument("--input_name", help="single input tsv file")
-    
+                             default="all_csv_files.txt")
+    args_parser.add_argument("--csv", nargs="*", help="csv file(s) to be processed")
     
