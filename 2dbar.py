@@ -4,6 +4,9 @@ Still not sure if I should do it in OOP, but fuck it... do this first
 """
 import csv
 import sys
+import numpy as np
+from matplotlib import pyplot
+
 import polly
 
 __author__ = "Shang Li"
@@ -26,22 +29,32 @@ def parse_csv(csv_name):
     with open(csv_name) as f:
         csv_reader = csv.reader(f)
         meta_info = csv_reader.next()
-        if not meta_info[0]:
+        if meta_info:
             params.update({"title": meta_info[0]})
-        # got title so far.
+        x_meta = csv_reader.next()
+        params.update({"xlabel": x_meta[0]})
+        params.update({"xticks": x_meta[1:]})
+        y_meta = csv_reader.next()
+        params.update({"ylabel": y_meta[0]})
+        params.update({"data": y_meta[1:]})
     return params
 
     
 def plot(params):
+    width = 0.4
+    if "width" in params:
+        width = float(params["width"])
+    data = map(int, params["data"])  # TODO what if float...?
+    y_max = max(data)
+    y_ticks = range(0, y_max, y_max/10),
     ind = np.arange(len(params["xticks"]))
-    ax = pyplot.subplot(111)
-    pyplot.bar(ind, height=params["data"], color="blue")
+    pyplot.bar(ind, height=data, color="blue")
     pyplot.title(params["title"])
     pyplot.xlabel(params["xlabel"])
-    pyplot.xticks(ind+params["width"]/2, params["xticks"])
+    pyplot.xticks(ind+width/2, params["xticks"])
     pyplot.ylabel(params["ylabel"])
-    pyplot.yticks(params["yticks"])
-    pyplot.savefig("sample.png")
+    pyplot.yticks(y_ticks)
+    # pyplot.savefig("sample.png")  #TODO cannot save?
     pyplot.close()
     return
 
@@ -53,4 +66,6 @@ def parse_and_plot(f_name):
     
 if __name__ == "__main__":
     file_list, out_dir = polly.parse_argv(sys.argv[1:])  # first element is this file...
+    for each_file in file_list:
+        parse_and_plot(each_file)
     print file_list
