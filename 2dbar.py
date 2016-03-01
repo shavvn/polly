@@ -45,6 +45,11 @@ def plot(params):
     pyplot.close()
     return
 
+
+def parse_and_plot(f_name):
+    params = parse_csv(f_name)
+    plot(params)
+
     
 if __name__ == "__main__":
     file_list, out_dir = polly.parse_argv(sys.argv[1:])  # first element is this file...
