@@ -7,6 +7,8 @@ class Polly(object):
     """
     A base class specify interfaces and do basic stuff such as init/set params
     """
+    color_base = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7']
+
     def __init__(self, *args, **kwargs):
         """
         set default params and user defined ones
