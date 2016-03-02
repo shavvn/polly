@@ -6,22 +6,21 @@ import csv
 import sys
 import numpy as np
 from matplotlib import pyplot
-
+import matplotlib
 import polly
 
 __author__ = "Shang Li"
 
-
-def set_params(**kwargs):
-    params = {}
-    for key, value in kwargs.iteritems():
-        params.update({key: value})
-    return params
-
-
-def add_params(param, **kwargs):
-    for key, value in kwargs.iteritems():
-        param.update({key: value})
+# matplotlib.rcParams['figure.figsize'] = 1.68, 1.5
+matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['ps.fonttype'] = 42
+font = {
+    'family': 'serif',
+    'weight': 'normal',
+    'size': 8
+}
+matplotlib.rc('font', **font)
+# matplotlib.rc('text', usetex=True)
 
 
 def parse_csv(csv_name):
@@ -45,16 +44,13 @@ def plot(params):
     if "width" in params:
         width = float(params["width"])
     data = map(int, params["data"])  # TODO what if float...?
-    y_max = max(data)
-    y_ticks = range(0, y_max, y_max/10),
     ind = np.arange(len(params["xticks"]))
     pyplot.bar(ind, height=data, color="blue")
     pyplot.title(params["title"])
     pyplot.xlabel(params["xlabel"])
     pyplot.xticks(ind+width/2, params["xticks"])
     pyplot.ylabel(params["ylabel"])
-    pyplot.yticks(y_ticks)
-    # pyplot.savefig("sample.png")  #TODO cannot save?
+    pyplot.savefig("sample.pdf", format="pdf", dpi=1000)  #TODO cannot save?
     pyplot.close()
     return
 
