@@ -53,7 +53,7 @@ def plot(ax, params):
     return
 
 
-def parse_and_plot(f_name, out_dir):
+def parse_plot_save(f_name, out_dir):
     params = parse_csv(f_name)
     fig, ax = pyplot.subplots(1, 1)
     plot(ax, params)
@@ -63,5 +63,5 @@ def parse_and_plot(f_name, out_dir):
 if __name__ == "__main__":
     file_list, out_dir = polly.parse_argv(sys.argv[1:])  # first element is this file...
     for each_file in file_list:
-        parse_and_plot(each_file, out_dir)
+        parse_plot_save(each_file, out_dir)
     print file_list
