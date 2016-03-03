@@ -17,7 +17,7 @@ matplotlib.rcParams['ps.fonttype'] = 42
 font = {
     'family': 'serif',
     'weight': 'normal',
-    'size': 8
+    # 'size': 12
 }
 matplotlib.rc('font', **font)
 # matplotlib.rc('text', usetex=True)
@@ -39,29 +39,29 @@ def parse_csv(csv_name):
     return params
 
     
-def plot(params):
+def plot(ax, params):
     width = 0.4
     if "width" in params:
         width = float(params["width"])
     data = map(int, params["data"])  # TODO what if float...?
     ind = np.arange(len(params["xticks"]))
-    pyplot.bar(ind, height=data, color=polly.color_base[1], edgecolor="none")
-    pyplot.title(params["title"])
-    pyplot.xlabel(params["xlabel"])
-    pyplot.xticks(ind+width/2, params["xticks"])
-    pyplot.ylabel(params["ylabel"])
-    pyplot.savefig("sample.pdf", format="pdf", dpi=1000)  #TODO cannot save?
-    pyplot.close()
+    ax.bar(ind, height=data, color=polly.color_base[1], edgecolor="none")
+    ax.set_title(params["title"])
+    ax.set_xlabel(params["xlabel"])
+    ax.set_xticks(ind+width/2, params["xticks"])
+    ax.set_ylabel(params["ylabel"])
     return
 
 
-def parse_and_plot(f_name):
+def parse_and_plot(f_name, out_dir):
     params = parse_csv(f_name)
-    plot(params)
-
+    fig, ax = pyplot.subplots(1, 1)
+    plot(ax, params)
+    fig.savefig(out_dir+params["title"]+".pdf", format="pdf", dpi=1000)
+    fig.clear()
     
 if __name__ == "__main__":
     file_list, out_dir = polly.parse_argv(sys.argv[1:])  # first element is this file...
     for each_file in file_list:
-        parse_and_plot(each_file)
+        parse_and_plot(each_file, out_dir)
     print file_list
