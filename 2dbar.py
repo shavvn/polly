@@ -45,7 +45,7 @@ def plot(params):
         width = float(params["width"])
     data = map(int, params["data"])  # TODO what if float...?
     ind = np.arange(len(params["xticks"]))
-    pyplot.bar(ind, height=data, color="blue")
+    pyplot.bar(ind, height=data, color=polly.color_base[1], edgecolor="none")
     pyplot.title(params["title"])
     pyplot.xlabel(params["xlabel"])
     pyplot.xticks(ind+width/2, params["xticks"])
