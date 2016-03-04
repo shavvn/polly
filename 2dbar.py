@@ -42,7 +42,8 @@ def plot(ax, params):
     ax.bar(ind, height=data, color=polly.color_base[1], edgecolor="none")
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
-    ax.set_xticks(ind+width/2, params["xticks"])
+    ax.set_xticks(ind)
+    ax.set_xticklabels(params["xticks"])
     ax.set_ylabel(params["ylabel"])
 
     return
