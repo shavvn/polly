@@ -26,7 +26,11 @@ def parse_csv(csv_name):
         params.update({"data": y_meta[1:]})
     return params
 
-    
+
+# def center_xtick(x_axis):
+#    for tick in x_axis.get_ticks():
+
+
 def plot(ax, params):
     width = 0.4
     if "width" in params:
@@ -39,11 +43,11 @@ def plot(ax, params):
     ax.xaxis.set_ticks_position('bottom')
     ax.yaxis.set_label_position('left')
     ax.yaxis.set_ticks_position('left')
-    ax.bar(ind, height=data, color=polly.color_base[1], edgecolor="none")
+    ax.bar(ind, height=data, color=polly.color_base[1], align="center", edgecolor="none")
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
     ax.set_xticks(ind)
-    ax.set_xticklabels(params["xticks"])
+    ax.set_xticklabels(params["xticks"], ha="center")
     ax.set_ylabel(params["ylabel"])
 
     return
