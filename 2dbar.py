@@ -6,21 +6,9 @@ import csv
 import sys
 import numpy as np
 from matplotlib import pyplot
-import matplotlib
 import polly
 
 __author__ = "Shang Li"
-
-# matplotlib.rcParams['figure.figsize'] = 1.68, 1.5
-matplotlib.rcParams['pdf.fonttype'] = 42
-matplotlib.rcParams['ps.fonttype'] = 42
-font = {
-    'family': 'serif',
-    'weight': 'normal',
-    # 'size': 12
-}
-matplotlib.rc('font', **font)
-# matplotlib.rc('text', usetex=True)
 
 
 def parse_csv(csv_name):
@@ -45,11 +33,18 @@ def plot(ax, params):
         width = float(params["width"])
     data = map(int, params["data"])  # TODO what if float...?
     ind = np.arange(len(params["xticks"]))
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.xaxis.set_label_position('bottom')
+    ax.xaxis.set_ticks_position('bottom')
+    ax.yaxis.set_label_position('left')
+    ax.yaxis.set_ticks_position('left')
     ax.bar(ind, height=data, color=polly.color_base[1], edgecolor="none")
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
     ax.set_xticks(ind+width/2, params["xticks"])
     ax.set_ylabel(params["ylabel"])
+
     return
 
 
