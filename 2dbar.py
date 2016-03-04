@@ -27,14 +27,7 @@ def parse_csv(csv_name):
     return params
 
 
-# def center_xtick(x_axis):
-#    for tick in x_axis.get_ticks():
-
-
 def plot(ax, params):
-    width = 0.4
-    if "width" in params:
-        width = float(params["width"])
     data = map(int, params["data"])  # TODO what if float...?
     ind = np.arange(len(params["xticks"]))
     ax.spines["top"].set_visible(False)
@@ -49,7 +42,6 @@ def plot(ax, params):
     ax.set_xticks(ind)
     ax.set_xticklabels(params["xticks"], ha="center")
     ax.set_ylabel(params["ylabel"])
-
     return
 
 
