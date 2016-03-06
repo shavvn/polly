@@ -43,15 +43,17 @@ def plot(ax, params):
     colors = polly.color_base
     colors.reverse()
     # TODO what if colors aren't enough...? Tho you certainly don't want to plot a hell lot of colors
+    handles = []
     for data_row in data:
-        ax.bar(ind, height=data_row, bottom=offset, color=colors.pop(), align="center", edgecolor="none")
+        bars = ax.bar(ind, height=data_row, bottom=offset, color=colors.pop(), align="center", edgecolor="none")
         offset = map(sum, zip(data_row, offset))  # Add this row to prepare the offset for next row
-    # TODO needs legend
+        handles.append(bars[0])
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
     ax.set_xticks(ind)
     ax.set_xticklabels(params["xticks"], ha="center")
     ax.set_ylabel(params["ylabel"])
+    ax.legend(handles, params["breakdowns"], loc="best")
     return
 
 
