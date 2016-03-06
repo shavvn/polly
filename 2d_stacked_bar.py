@@ -47,6 +47,8 @@ def plot(ax, params):
         offset = map(sum, zip(data_row, offset))  # Add this row to prepare the offset for next row
         handles.append(bars[0])
         index += 1
+    for each_bar, height in zip(bars, offset):
+        ax.text(each_bar.get_x()+each_bar.get_width()/2, 1.05*height, '%.1f' % float(height), ha='center', va='bottom')
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
     ax.set_xticks(ind)
