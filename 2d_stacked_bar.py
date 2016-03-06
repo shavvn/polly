@@ -17,16 +17,41 @@ def parse_csv(csv_name):
         x_meta = csv_reader.next()
         params.update({"xlabel": x_meta[0]})
         params.update({"xticks": x_meta[1:]})
+        y_meta = csv_reader.next()
+        params.update({"ylabel": y_meta[0]})
         data = []
-        break_downs = []
+        breakdowns = []
         for line in csv_reader:
-            break_downs.append(line[0])
-            data.append(line[1:])
+            breakdowns.append(line[0])
+            data.append(map(float, line[1:]))  # Convert to float instead of int
+            # TODO maybe throw an exception if cannot convert?
+        params.update({"data": data})
+        params.update({"breakdowns": breakdowns})
     return params
 
 
 def plot(ax, params):
-    # put a place holder here for now
+    ind = np.arange(len(params["xticks"]))
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.xaxis.set_label_position('bottom')
+    ax.xaxis.set_ticks_position('bottom')
+    ax.yaxis.set_label_position('left')
+    ax.yaxis.set_ticks_position('left')
+    data = params["data"]
+    offset = [0]*len(data[0])
+    colors = polly.color_base
+    colors.reverse()
+    # TODO what if colors aren't enough...? Tho you certainly don't want to plot a hell lot of colors
+    for data_row in data:
+        ax.bar(ind, height=data_row, bottom=offset, color=colors.pop(), align="center", edgecolor="none")
+        offset = map(sum, zip(data_row, offset))  # Add this row to prepare the offset for next row
+    # TODO needs legend
+    ax.set_title(params["title"])
+    ax.set_xlabel(params["xlabel"])
+    ax.set_xticks(ind)
+    ax.set_xticklabels(params["xticks"], ha="center")
+    ax.set_ylabel(params["ylabel"])
     return
 
 
