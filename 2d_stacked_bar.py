@@ -40,14 +40,13 @@ def plot(ax, params):
     ax.yaxis.set_ticks_position('left')
     data = params["data"]
     offset = [0]*len(data[0])
-    colors = polly.color_base
-    colors.reverse()
-    # TODO what if colors aren't enough...? Tho you certainly don't want to plot a hell lot of colors
     handles = []
+    index = 0  # have to do it in not a pythonic way, but whatever...
     for data_row in data:
-        bars = ax.bar(ind, height=data_row, bottom=offset, color=colors.pop(), align="center", edgecolor="none")
+        bars = ax.bar(ind, height=data_row, bottom=offset, color=polly.color_base[index], align="center", edgecolor="none")
         offset = map(sum, zip(data_row, offset))  # Add this row to prepare the offset for next row
         handles.append(bars[0])
+        index += 1
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
     ax.set_xticks(ind)
