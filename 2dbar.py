@@ -23,7 +23,7 @@ def parse_csv(csv_name):
         params.update({"xticks": x_meta[1:]})
         y_meta = csv_reader.next()
         params.update({"ylabel": y_meta[0]})
-        params.update({"data": y_meta[1:]})
+        params.update({"data": map(float, y_meta[1:])})
     return params
 
 
@@ -51,7 +51,7 @@ def parse_plot_save(f_name, out_dir):
     plot(ax, params)
     fig.savefig(out_dir+params["title"]+".pdf", format="pdf", dpi=1000)
     fig.clear()
-    
+
 if __name__ == "__main__":
     file_list, out_dir = polly.parse_argv(sys.argv[1:])  # first element is this file...
     for each_file in file_list:
