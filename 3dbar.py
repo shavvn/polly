@@ -2,6 +2,7 @@ import csv
 import sys
 import numpy as np
 from matplotlib import pyplot
+from matplotlib import cm
 from mpl_toolkits.mplot3d import Axes3D
 import polly
 
@@ -51,7 +52,9 @@ def plot(ax, params):
     data = data.flatten()
     dx = 0.5*np.ones_like(zpos)
     dy = dx.copy()
-    ax.bar3d(xpos, ypos, zpos, dx, dy, data, color=polly.color_base[1], edgecolor="none")
+    colors = polly.color_base[0:x_len]
+    colors *= y_len
+    ax.bar3d(xpos, ypos, zpos, dx, dy, data, color=colors, edgecolor="none", alpha=0.65)
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
     ax.set_xticks(xpos+0.25)
