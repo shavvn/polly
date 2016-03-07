@@ -25,50 +25,53 @@ def parse_csv(csv_name):
         x_meta = csv_reader.next()
         params.update({"xlabel": x_meta[0]})
         params.update({"xticks": x_meta[1:]})
+        y_meta = csv_reader.next()
+        params.update({"ylabel": y_meta[0]})
+        params.update({"yticks": y_meta[1:]})
         z_meta = csv_reader.next()
         params.update({"zlabel": z_meta[0]})
         data = []
-        breakdowns = []
         for line in csv_reader:
-            breakdowns.append(line[0])
-            data.append(map(float, line[1:]))  # Convert to float instead of int
+            data.append(map(float, line))  # Convert to float instead of int
             # TODO maybe throw an exception if cannot convert?
         params.update({"data": data})
-        params.update({"breakdowns": breakdowns})
     return params
 
 
 def plot(ax, params):
-    ind = np.arange(len(params["xticks"]))
-    ax.spines["top"].set_visible(False)
-    ax.spines["right"].set_visible(False)
-    ax.xaxis.set_label_position('bottom')
-    ax.xaxis.set_ticks_position('bottom')
-    ax.yaxis.set_label_position('left')
-    ax.yaxis.set_ticks_position('left')
+    x_len = len(params["xticks"])
+    y_len = len(params["yticks"])
+    xpos = y_len*range(x_len)  # It's not elegant but easy to repeat
+    ypos = x_len*range(y_len)
+    xpos = np.array(xpos)
+    ypos = np.array(ypos)
+    zpos = np.zeros(x_len*y_len)
+    # ax.spines["top"].set_visible(False)
+    # ax.spines["right"].set_visible(False)
+    # ax.xaxis.set_label_position('bottom')
+    # ax.xaxis.set_ticks_position('bottom')
+    # ax.yaxis.set_label_position('left')
+    # ax.yaxis.set_ticks_position('left')
     data = params["data"]
-    offset = [0]*len(data[0])
-    handles = []
-    index = 0  # have to do it in not a pythonic way, but whatever...
-    for data_row in data:
-        bars = ax.bar(ind, height=data_row, bottom=offset, color=polly.color_base[index], align="center", edgecolor="none")
-        offset = map(sum, zip(data_row, offset))  # Add this row to prepare the offset for next row
-        handles.append(bars[0])
-        index += 1
-    for each_bar, height in zip(bars, offset):
-        ax.text(each_bar.get_x()+each_bar.get_width()/2, 1.05*height, '%.1f' % float(height), ha='center', va='bottom')
+    data = np.array(data)
+    data = data.flatten()
+    dx = 0.5*np.ones_like(zpos)
+    dy = dx.copy()
+    ax.bar3d(xpos, ypos, zpos, dx, dy, data, color=polly.color_base[1])
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
-    ax.set_xticks(ind)
+    ax.set_xticks(xpos)
     ax.set_xticklabels(params["xticks"], ha="center")
     ax.set_ylabel(params["ylabel"])
-    ax.legend(handles, params["breakdowns"], loc="best")
+    ax.set_yticks(ypos)
+    ax.set_yticklabels(params["yticks"], ha="center")
     return
 
 
 def parse_plot_save(f_name, out_dir):
     params = parse_csv(f_name)
-    fig, ax = pyplot.subplots(1, 1)
+    fig = pyplot.figure()
+    ax = fig.add_subplot(111, projection='3d')
     plot(ax, params)
     fig.savefig(out_dir+params["title"]+".pdf", format="pdf", dpi=1000)
     fig.clear()
