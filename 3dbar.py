@@ -46,18 +46,12 @@ def plot(ax, params):
     xpos = np.array(xpos)
     ypos = np.array(ypos)
     zpos = np.zeros(x_len*y_len)
-    # ax.spines["top"].set_visible(False)
-    # ax.spines["right"].set_visible(False)
-    # ax.xaxis.set_label_position('bottom')
-    # ax.xaxis.set_ticks_position('bottom')
-    # ax.yaxis.set_label_position('left')
-    # ax.yaxis.set_ticks_position('left')
     data = params["data"]
     data = np.array(data)
     data = data.flatten()
     dx = 0.5*np.ones_like(zpos)
     dy = dx.copy()
-    ax.bar3d(xpos, ypos, zpos, dx, dy, data, color=polly.color_base[1])
+    ax.bar3d(xpos, ypos, zpos, dx, dy, data, color=polly.color_base[1], edgecolor="none")
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
     ax.set_xticks(xpos)
@@ -65,6 +59,7 @@ def plot(ax, params):
     ax.set_ylabel(params["ylabel"])
     ax.set_yticks(ypos)
     ax.set_yticklabels(params["yticks"], ha="center")
+    ax.set_zlabel(params["zlabel"])
     return
 
 
