@@ -43,8 +43,8 @@ def plot(ax, params):
     y_len = len(params["yticks"])
     xpos = y_len*range(x_len)  # It's not elegant but easy to repeat
     ypos = x_len*range(y_len)
-    xpos = np.array(xpos)
-    ypos = np.array(ypos)
+    xpos = np.array(xpos)+0.25
+    ypos = np.array(ypos)+0.25
     zpos = np.zeros(x_len*y_len)
     data = params["data"]
     data = np.array(data)
@@ -54,10 +54,10 @@ def plot(ax, params):
     ax.bar3d(xpos, ypos, zpos, dx, dy, data, color=polly.color_base[1], edgecolor="none")
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
-    ax.set_xticks(xpos)
+    ax.set_xticks(xpos+0.25)
     ax.set_xticklabels(params["xticks"], ha="center")
     ax.set_ylabel(params["ylabel"])
-    ax.set_yticks(ypos)
+    ax.set_yticks(ypos+0.25)
     ax.set_yticklabels(params["yticks"], ha="center")
     ax.set_zlabel(params["zlabel"])
     return
