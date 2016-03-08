@@ -58,16 +58,16 @@ def plot(ax, params):
     return
 
 
-def parse_plot_save(f_name, out_dir):
+def parse_plot_save(f_name, out_dir, graph_format):
     params = parse_csv(f_name)
     fig, ax = pyplot.subplots(1, 1)
     plot(ax, params)
-    fig.savefig(out_dir+params["title"]+".pdf", format="pdf", dpi=1000)
+    polly.save_fig(fig, polly.gen_output_name(f_name, out_dir), graph_format)
     fig.clear()
 
 
 if __name__ == "__main__":
-    file_list, out_dir = polly.parse_argv(sys.argv[1:])  # first element is this file...
+    file_list, out_dir, graph_format = polly.parse_argv(sys.argv[1:])  # first element is this file...
     for each_file in file_list:
-        parse_plot_save(each_file, out_dir)
+        parse_plot_save(each_file, out_dir, graph_format)
     print file_list
