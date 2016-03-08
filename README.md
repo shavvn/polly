@@ -30,5 +30,11 @@ or you if you have your *axes* object and params ready in your program, you can 
 ```
 
 To be finished...
-**TODO**: complete a param list with default values..
+
+**TODO**: 
+
+- complete a param list with default values.
+- put output format in args
+- figure out what should be put in args, what should be in params
+- need support for 3d surface, heatmap, etc
 
