@@ -17,6 +17,9 @@ or you if you have your *axes* object and params ready in your program, you can 
 2dbar.plot(ax, params)
 ```
 
+The result is as follows:
+![2D Bar Sample](examples/2D Bar.pdf)
+
 ### Plot a 2D Stacked bar graph
 
 To plot a 2D bar graph from a csv file, simply do
