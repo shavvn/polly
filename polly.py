@@ -82,7 +82,7 @@ def argv_parser(argv):
                              default="all_csv_files.txt")
     args_parser.add_argument("--csv", nargs="*", help="the name(s) of the input csv file, needs to have same format as "
                                                       "sample", default="2d_bar_sample.csv")
-    args_parser.add_argument("--format" help="The output format of the graph, either pdf or png",
+    args_parser.add_argument("--format", help="The output format of the graph, either pdf or png",
                              default="png")
     args_parser.add_argument("-pdf", help="set output format to pdf", action="store_true")
     args_parser.add_argument("-png", help="set output format to png", action="store_true")
@@ -123,5 +123,4 @@ def parse_argv(argv):
         graph_format = "png"
     else:
         graph_format = args.format
-    return f_list, out_dir
-    
+    return f_list, out_dir, graph_format
