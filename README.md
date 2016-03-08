@@ -18,7 +18,7 @@ or you if you have your *axes* object and params ready in your program, you can 
 ```
 
 The result is as follows:
-![2D Bar Sample](examples/2D Bar.pdf)
+![2D Bar Sample](examples/2D_Bar.pdf)
 
 ### Plot a 2D Stacked bar graph
 
