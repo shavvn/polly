@@ -71,7 +71,12 @@ def parse_plot_save(f_name, out_dir, graph_format):
     fig = pyplot.figure()
     ax = fig.add_subplot(111, projection='3d')
     plot(ax, params)
-    fig.savefig(out_dir+params["title"]+"."+graph_format, format=graph_format, dpi=1000)
+    # for 3d plots, save 2 figures from 120 and 240 angle to make sure everything is visible
+    ax.view_init(30, 120)
+    polly.save_fig(fig, polly.gen_output_name(f_name, out_dir), graph_format)
+    ax.view_init(30, 240)
+    out_name = polly.gen_output_name(f_name, out_dir) + "_2"
+    polly.save_fig(fig, out_name, graph_format)
     fig.clear()
 
 
