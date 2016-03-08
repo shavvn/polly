@@ -73,7 +73,7 @@ class Polly(object):
 color_base = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7']
 
 
-def argv_parser(argv):
+def get_args(argv):
     args_parser = argparse.ArgumentParser(description="take input to plot, either a file, or something else...")
     args_parser.add_argument("--output_dir", help="output directory of all shit", default="./examples/")
     args_parser.add_argument("--input_dir", help="input dir contains all csv files to be processed",
@@ -83,10 +83,9 @@ def argv_parser(argv):
     args_parser.add_argument("--csv", nargs="*", help="the name(s) of the input csv file, needs to have same format as "
                                                       "sample", default="2d_bar_sample.csv")
     args_parser.add_argument("--format", help="The output format of the graph, either pdf or png",
-                             default="png")
+                             default="png", type=str, choices=["pdf", "png"])
     args_parser.add_argument("-pdf", help="set output format to pdf", action="store_true")
     args_parser.add_argument("-png", help="set output format to png", action="store_true")
-    # TODO figure out if we can merge the above 3 together
     args = args_parser.parse_args(argv)
     return args
 
@@ -94,7 +93,7 @@ def argv_parser(argv):
 def parse_argv(argv):
     f_list = []
     out_dir = "./output/"
-    args = argv_parser(argv)
+    args = get_args(argv)
     if len(args.csv) > 0:
         f_list = args.csv
     elif args.input_dir:
