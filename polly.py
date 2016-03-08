@@ -75,7 +75,7 @@ color_base = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', 
 
 def argv_parser(argv):
     args_parser = argparse.ArgumentParser(description="take input to plot, either a file, or something else...")
-    args_parser.add_argument("--output_dir", help="output directory of all shit", default="./output/")
+    args_parser.add_argument("--output_dir", help="output directory of all shit", default="./examples/")
     args_parser.add_argument("--input_dir", help="input dir contains all csv files to be processed",
                              default="./input/")
     args_parser.add_argument("--list_file", help="input file contains list of file dir + names",
@@ -124,3 +124,30 @@ def parse_argv(argv):
     else:
         graph_format = args.format
     return f_list, out_dir, graph_format
+
+
+def gen_output_name(input_name, out_dir):
+    """
+    This is a helper function that take a input dir+file_name and a output dir name then
+    generate a output name.
+    e.g. if input_name= ../input/file.txt and out_dir= ../output/, you want the output to be
+    ../output/file.something instead of ../input/..output/file.something...
+    :param input_name: a mix of path and name
+    :param out_dir: output dir
+    :return: corrected output dir
+    """
+    base_name = os.path.basename(input_name)  # get rid of path
+    base_name = os.path.splitext(base_name)[0]  # get rid of extension name
+    out_name = out_dir + "/" + base_name
+    return out_name
+
+
+def save_fig(fig, output_name, output_format):
+    output_dpi = 600  # 600 should be enough for most cases, even for printing
+    if output_format == "pdf":
+        pass
+    elif output_format == "png":
+        output_dpi = 300
+    else:
+        output_format = "png"
+    fig.savefig(output_name+"."+output_format, format=output_format, dpi=output_dpi)
