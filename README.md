@@ -39,5 +39,7 @@ To be finished...
 - complete a param list with default values.
 - put output format in args
 - figure out what should be put in args, what should be in params
+    - For now I think graph-type-specific parameters should be kept in params, e.g. the data 
+    - Other general stuff should be in args, e.g. the output format, location, etc.
 - need support for 3d surface, heatmap, etc
 
