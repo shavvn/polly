@@ -9,7 +9,7 @@ Polly is a wrapper package of matplotlib that can easily generate plots charts a
 
 To plot a 2D bar graph from a csv file, simply do
 ```
-python 2dbar.py --csv 2d_bar_sample.csv
+python 2dbar.py --csv examples/2d_bar_sample.csv
 ```
 
 or you if you have your *axes* object and params ready in your program, you can use
@@ -24,7 +24,7 @@ The result is as follows:
 
 To plot a 2D bar graph from a csv file, simply do
 ```
-python 2d_stacked_bar.py --csv 2d_stacked_sample.csv
+python 2d_stacked_bar.py --csv examples/2d_stacked_sample.csv
 ```
 
 or you if you have your *axes* object and params ready in your program, you can use
@@ -32,7 +32,27 @@ or you if you have your *axes* object and params ready in your program, you can 
 2d_stacked_bar.plot(ax, params)
 ```
 
-To be finished...
+The result is as follows:
+![2D Stacked Bar Sample](examples/2d_stacked_sample.png)
+
+### Plot a 3D Bar Graph
+
+To plot a 3D bar graph from a csv file, simply do
+```
+python 3dbar.py --csv examples/3d_bar_sample.csv
+```
+
+or you if you have your *axes* object and params ready in your program, you can use
+```
+2dbar.plot(ax, params)
+```
+
+The result is as follows: (2 graphs of different angles will be generated so that you have the best view.
+![3D Bar Sample](examples/3d_bar_sample.png)
+
+### Others
+
+For more options for above commands, simply use *-h* or *--help* option when running the commands.
 
 **TODO**: 
 
