@@ -1,3 +1,12 @@
+"""
+This file saves some public APIs that the submodules may use.
+I once considered to do it in OOP way, back then it looked unnecessary so I just stopped doing
+it but instead tried to implement it in a very basic, function way. That's why you see the
+Polly class here and the bar.py in the project.
+But after I complete the 3rd submodule I realized I might switch back to OOP sometime...
+For the development of new submodules, I'll keep doing traditional way, but I'll also have
+another OOP branch trying to refector it to OOP...
+"""
 import os
 import argparse
 from abc import abstractmethod
