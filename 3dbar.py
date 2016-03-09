@@ -2,8 +2,6 @@ import csv
 import sys
 import numpy as np
 from matplotlib import pyplot
-from matplotlib import cm
-from mpl_toolkits.mplot3d import Axes3D
 import polly
 
 __author__ = "Shang Li"
