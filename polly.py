@@ -100,6 +100,12 @@ def get_args(argv):
 
 
 def parse_argv(argv):
+    """
+    take argv as input, parse it and return usable data structures
+    :param argv:
+    :return: file_list a list of files need to be parsed, output dir is where they
+            need to be stored, and format is in what format they neeed to be stored.
+    """
     f_list = []
     out_dir = "./output/"
     args = get_args(argv)

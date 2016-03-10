@@ -24,6 +24,7 @@ def parse_csv(csv_name):
         x_meta = csv_reader.next()
         params.update({"xlabel": x_meta[0]})
         params.update({"xticks": x_meta[1:]})
+        # different from 3d bar, the xpos and ypos for 3d surface seemed to be an 2d array..
         y_meta = csv_reader.next()
         params.update({"ylabel": y_meta[0]})
         params.update({"yticks": y_meta[1:]})
