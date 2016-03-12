@@ -41,6 +41,11 @@ def parse_csv(csv_name):
 def plot(ax, params):
     x_len = len(params["xticks"])
     y_len = len(params["yticks"])
+    # this is more difficult than I anticipated... you first need to triangulate the data to 3D
+    # so that the data you pass to the plot_surface X, Y, Z are 2D arrays
+    # and it turns out that the triangulation process is not trivial... wtf..
+    # http://stackoverflow.com/questions/9170838/surface-plots-in-matplotlib
+    # the above link should help on this issue
     xpos = y_len*range(x_len)  # It's not elegant but easy to repeat
     ypos = x_len*range(y_len)
     xpos = np.array(xpos)+0.25
