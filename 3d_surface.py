@@ -46,20 +46,14 @@ def plot(ax, params):
     # and it turns out that the triangulation process is not trivial... wtf..
     # http://stackoverflow.com/questions/9170838/surface-plots-in-matplotlib
     # the above link should help on this issue
-    xpos = y_len*range(x_len)  # It's not elegant but easy to repeat
-    ypos = x_len*range(y_len)
-    xpos = np.array(xpos)+0.25
-    ypos = np.array(ypos)+0.25
-    zpos = np.zeros(x_len*y_len)
+    x = np.arrange(0, x_len, 1)
+    y = np.arrange(0, y_len, 1)
+    X, Y = np.meshgrid(x, y)
     data = params["data"]
     data = np.array(data)
     data = data.flatten()
-    dx = 0.5*np.ones_like(zpos)
-    dy = dx.copy()
-    colors = polly.color_base[0:x_len]
-    colors *= y_len
-    X, Y = np.meshgrid(xpos, ypos)
-    ax.plot_surface(xpos, ypos, zpos, dx, dy, data, color=colors, edgecolor="none", alpha=0.65)
+    Z = data.reshape(X.shape)
+    ax.plot_surface(X, Y, Z)
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
     ax.set_xticks(xpos+0.25)
