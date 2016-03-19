@@ -41,13 +41,17 @@ def parse_csv(csv_name):
 
 
 def plot(ax, params):
-    x_len = len(params["xticks"])
-    y_len = len(params["yticks"])
+    """
     # this is more difficult than I anticipated... you first need to triangulate the data to 3D
     # so that the data you pass to the plot_surface X, Y, Z are 2D arrays
-    # and it turns out that the triangulation process is not trivial... wtf..
+    # refered the link below and solved this probelm.
     # http://stackoverflow.com/questions/9170838/surface-plots-in-matplotlib
-    # the above link should help on this issue
+    :param ax:
+    :param params:
+    :return:
+    """
+    x_len = len(params["xticks"])
+    y_len = len(params["yticks"])
     x = np.arange(0, x_len, 1)
     y = np.arange(0, y_len, 1)
     X, Y = np.meshgrid(x, y)
@@ -55,6 +59,7 @@ def plot(ax, params):
     data = np.array(data)
     data = data.flatten()
     Z = data.reshape(X.shape)
+    # Z = data
     ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, rstride=1, cstride=1, linewidth=1)
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
@@ -74,6 +79,7 @@ def parse_plot_save(f_name, out_dir, graph_format):
     plot(ax, params)
     # for 3d plots, save 2 figures from 120 and 240 angle to make sure everything is visible
     ax.view_init(30, 120)
+    fig.show()
     polly.save_fig(fig, polly.gen_output_name(f_name, out_dir), graph_format)
     ax.view_init(30, 240)
     out_name = polly.gen_output_name(f_name, out_dir) + "_2"
