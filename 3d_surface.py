@@ -2,6 +2,7 @@ import csv
 import sys
 import numpy as np
 from matplotlib import pyplot
+from mpl_toolkits.mplot3d import Axes3D
 import polly
 
 __author__ = "Shang Li"
@@ -46,8 +47,8 @@ def plot(ax, params):
     # and it turns out that the triangulation process is not trivial... wtf..
     # http://stackoverflow.com/questions/9170838/surface-plots-in-matplotlib
     # the above link should help on this issue
-    x = np.arrange(0, x_len, 1)
-    y = np.arrange(0, y_len, 1)
+    x = np.arange(0, x_len, 1)
+    y = np.arange(0, y_len, 1)
     X, Y = np.meshgrid(x, y)
     data = params["data"]
     data = np.array(data)
@@ -56,10 +57,10 @@ def plot(ax, params):
     ax.plot_surface(X, Y, Z)
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
-    ax.set_xticks(xpos+0.25)
+    ax.set_xticks(x)
     ax.set_xticklabels(params["xticks"], ha="center")
     ax.set_ylabel(params["ylabel"])
-    ax.set_yticks(ypos+0.25)
+    ax.set_yticks(y)
     ax.set_yticklabels(params["yticks"], ha="center")
     ax.set_zlabel(params["zlabel"])
     return
