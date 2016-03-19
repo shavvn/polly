@@ -58,9 +58,14 @@ def plot(ax, params):
     data = params["data"]
     data = np.array(data)
     data = data.flatten()
+    data = np.log10(data)
+    for i in range(len(data)):
+        if data[i] == -float('Inf') or data[i] == float('Inf'):
+            data[i] = -5
     Z = data.reshape(X.shape)
     # Z = data
     ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, rstride=1, cstride=1, linewidth=1)
+    ax.set_zlim(-2.0, 2.0)
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
     ax.set_xticks(x)
