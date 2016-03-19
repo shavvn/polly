@@ -3,6 +3,7 @@ import sys
 import numpy as np
 from matplotlib import pyplot
 from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
 import polly
 
 __author__ = "Shang Li"
@@ -54,7 +55,7 @@ def plot(ax, params):
     data = np.array(data)
     data = data.flatten()
     Z = data.reshape(X.shape)
-    ax.plot_surface(X, Y, Z)
+    ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, rstride=1, cstride=1, linewidth=1)
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
     ax.set_xticks(x)
