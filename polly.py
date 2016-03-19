@@ -157,6 +157,13 @@ def gen_output_name(input_name, out_dir):
 
 
 def save_fig(fig, output_name, output_format):
+    """
+    Save fig with specified name and format (post fix)
+    :param fig: fig handler
+    :param output_name: output name, should include path if not sure
+    :param output_format: output format, will be shown as a post fix
+    :return: nothing for now..
+    """
     output_dpi = 600  # 600 should be enough for most cases, even for printing
     if output_format == "pdf":
         pass
