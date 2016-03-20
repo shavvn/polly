@@ -50,6 +50,21 @@ or you if you have your *axes* object and params ready in your program, you can 
 The result is as follows: (2 graphs of different angles will be generated so that you have the best view.
 ![3D Bar Sample](examples/3d_bar_sample.png)
 
+### Plot a 3D Surface Graph
+
+To plot a 3D surface graph from a csv file, simply do
+```
+python 3dbar.py --csv examples/3d_surface_sample.csv
+```
+
+or you if you have your *axes* object and params ready in your program, you can use
+```
+2dbar.plot(ax, params)
+```
+
+The result looks like: 
+![3D Surface Sample](examples/3d_surface_sample.png)
+
 ### Others
 
 For more options for above commands, simply use *-h* or *--help* option when running the commands.
