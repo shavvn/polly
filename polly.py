@@ -55,7 +55,7 @@ class Polly(object):
         :return: None
         """
         raise NotImplementedError("Subclass must implement abstract method")
-    
+
     @abstractmethod
     def parse_csv(self, file_name):
         """
@@ -73,6 +73,20 @@ class Polly(object):
         :return: none for now...
         """
         raise NotImplementedError("Subclass must implement abstract method")
+
+    def set_x_axis(self, ticks):
+        self.ax.xaxis.set_label_position('bottom')
+        self.ax.xaxis.set_ticks_position('bottom')
+        self.ax.set_xlabel(self.params["xlabel"])
+        self.ax.set_xticks(ticks)
+        self.ax.set_xticklabels(self.params["xticks"], ha="center")
+
+    def set_y_axis(self):
+        self.ax.yaxis.set_label_position('left')
+        self.ax.yaxis.set_ticks_position('left')
+        self.ax.set_ylabel(self.params["ylabel"])
+        # TODO maybe y and x should be handled differently but it's better to be consistent for 3d purposes...
+
 
 color_base = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7']
 

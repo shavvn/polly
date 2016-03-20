@@ -34,24 +34,18 @@ class Bar2D(polly.Polly):
 
     def plot(self):
         data = map(int, self.params["data"])
-        ind = np.arange(len(self.params["xticks"]))
+        x_ticks = np.arange(len(self.params["xticks"]))
+        self.set_x_axis(x_ticks)
+        self.set_y_axis()
         self.ax.spines["top"].set_visible(False)
         self.ax.spines["right"].set_visible(False)
-        self.ax.xaxis.set_label_position('bottom')
-        self.ax.xaxis.set_ticks_position('bottom')
-        self.ax.yaxis.set_label_position('left')
-        self.ax.yaxis.set_ticks_position('left')
-        self.ax.bar(ind, height=data, color=polly.color_base[1], align="center", edgecolor="none")
+        self.ax.bar(x_ticks, height=data, color=polly.color_base[1], align="center", edgecolor="none")
         self.ax.set_title(self.params["title"])
-        self.ax.set_xlabel(self.params["xlabel"])
-        self.ax.set_xticks(ind)
-        self.ax.set_xticklabels(self.params["xticks"], ha="center")
-        self.ax.set_ylabel(self.params["ylabel"])
+
 
     def save_fig(self, output_name, output_format):
         """
         Save fig with specified name and format (post fix)
-        :param fig: fig handler
         :param output_name: output name, should include path if not sure
         :param output_format: output format, will be shown as a post fix
         :return: nothing for now..
