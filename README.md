@@ -63,7 +63,7 @@ or you if you have your *axes* object and params ready in your program, you can 
 ```
 
 The result looks like: 
-![3D Surface Sample](examples/3d_surface_sample.png)
+![3D Surface Sample](examples/3d_surface_sample_2.png)
 
 ### Others
 
