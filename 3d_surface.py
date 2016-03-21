@@ -63,16 +63,32 @@ def plot(ax, params):
         if data[i] == -float('Inf') or data[i] == float('Inf'):
             data[i] = -5
     Z = data.reshape(X.shape)
+    Z[Y<=X-9.] = np.nan
     # Z = data
-    ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, rstride=1, cstride=1, linewidth=1)
+    ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, rstride=1, cstride=1, linewidth=1, vmin=-2, vmax=1)
     ax.set_zlim(-2.0, 2.0)
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
     ax.set_xticks(x)
-    ax.set_xticklabels(params["xticks"], ha="center")
+    x_ticks = []
+    y_ticks = []
+    cnt = 0
+    for a_tick in params["xticks"]:
+        if cnt % 3 == 0:
+            x_ticks.append(a_tick)
+        else:
+            x_ticks.append(" ")
+        cnt += 1
+    cnt = 0
+    for a_tick in params["yticks"]:
+        if cnt % 3 == 0:
+            y_ticks.append(a_tick)
+        else:
+            y_ticks.append(" ")
+    ax.set_xticklabels(x_ticks, ha="center")
     ax.set_ylabel(params["ylabel"])
     ax.set_yticks(y)
-    ax.set_yticklabels(params["yticks"], ha="center")
+    ax.set_yticklabels(y_ticks, ha="center")
     ax.set_zlabel(params["zlabel"])
     return
 
