@@ -144,7 +144,7 @@ def get_args(argv):
     args_parser.add_argument("--list_file", help="input file contains list of file dir + names",
                              default="all_csv_files.txt")
     args_parser.add_argument("--csv", nargs="*", help="the name(s) of the input csv file, needs to have same format as "
-                                                      "sample", default="2d_bar_sample.csv")
+                                                      "sample", default="2d_bar.csv")
     args_parser.add_argument("--format", help="The output format of the graph, either pdf or png",
                              default="png", type=str, choices=["pdf", "png"])
     args_parser.add_argument("-pdf", help="set output format to pdf", action="store_true")
