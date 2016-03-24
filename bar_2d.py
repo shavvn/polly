@@ -49,17 +49,23 @@ class Bar2D(polly.Polly):
         self.plot_and_save(**kwargs)
 
 
-def plot(params):
+def plot(*args, **params):
     """
-    TODO: this still could be simplified by just passing data, let the program figure
-    out x and y
+    This is different from the plot in class, you only need to pass "data" in here, the program will figure
+    out the rest. (of course you can also pass more than just data)
     :param params: params, should have at least "data" set
     :return: should return the object or just (fig, ax)?
     """
-    bar_2d = Bar2D(**params)
-    bar_2d.plot()
-    bar_2d.fig.show()
-
+    if len(args) == 1:  # only support data for now
+        if isinstance(args[0], list):
+            bar_2d = Bar2D(data=args[0])
+            bar_2d.plot()
+            bar_2d.fig.show()
+    else:
+        bar_2d = Bar2D(**params)
+        bar_2d.plot()
+        bar_2d.fig.show()
+        
 
 def plot_save(params, **kwargs):
     """
