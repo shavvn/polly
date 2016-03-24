@@ -1,8 +1,6 @@
 import polly
 import csv
 import sys
-import numpy as np
-
 
 
 class Bar2D(polly.Polly):
@@ -41,15 +39,14 @@ class Bar2D(polly.Polly):
         self.ax.bar(x_ticks, height=data, color=polly.color_base[1], align="center", edgecolor="none")
         self.ax.set_title(self.params["title"])
 
-    def plot_save(self, output_name, **kwargs):
+    def plot_and_save(self, **kwargs):
         self.plot()
-        self.save_fig(output_name, **kwargs)
+        self.save_fig(**kwargs)
         self.fig.clear()
 
-    def parse_plot_save(self, f_name, out_dir, graph_format):
-        output_name = polly.gen_output_name(f_name, out_dir)
+    def parse_plot_save(self, f_name, **kwargs):
         self.parse_csv(f_name)
-        self.plot_save(output_name, output_format=graph_format)
+        self.plot_and_save(**kwargs)
 
 
 def plot(params):
@@ -57,29 +54,31 @@ def plot(params):
     TODO: this still could be simplified by just passing data, let the program figure
     out x and y
     :param params: params, should have at least "data" set
-    :return:
+    :return: should return the object or just (fig, ax)?
     """
     bar_2d = Bar2D(**params)
     bar_2d.plot()
     bar_2d.fig.show()
 
 
-def plot_save(f_name, params, out_dir, format):
+def plot_save(params, **kwargs):
     """
-    TODO for those out_dir, format which have default values, could pack it to **kwarg
-    :param f_name: name to be saved
     :param params: params
-    :param out_dir: where to be saved
-    :param format: format to be saved
+    :param kwargs: output kwargs
     :return:
     """
     bar_2d = Bar2D(**params)
-    bar_2d.plot_save(f_name, out_dir, format)
+    bar_2d.plot_and_save(**kwargs)
 
 
 def parse_plot_save(csv_file, out_dir, format):
+    """
+    TODO only this needs to be changed along with the parse_argv function
+    """
     bar_2d = Bar2D()
-    bar_2d.parse_plot_save(csv_file, out_dir, format)
+    kwargs = {"output_dir": out_dir,
+              "output_format": format}
+    bar_2d.parse_plot_save(csv_file, **kwargs)
 
 
 if __name__ == "__main__":

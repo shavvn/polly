@@ -12,6 +12,7 @@ from matplotlib import pyplot
 class Polly(object):
     """
     A base class specify interfaces and do basic stuff such as init/set params
+    and fig ax handlers
     """
     def __init__(self, **kwargs):
         """
@@ -23,10 +24,11 @@ class Polly(object):
             "title": "Default Title",
             "data": None,
         }
-        self.plot_type = "Default"
         self.set_params(**kwargs)
+        self.plot_type = "Default"
         self.output_dpi = 300
-        self.output_dir = "examples"+os.pathsep
+        self.output_dir = "examples/"
+        self.output_name = get_out_name_from_title(self.params["title"])
         self.output_format = "png"
 
     def get_params(self):
@@ -96,25 +98,42 @@ class Polly(object):
         self.ax.yaxis.set_ticks_position('left')
         self.ax.set_ylabel(self.params["ylabel"])
         
-    def save_fig(self, output_name, **kwargs):
+    def save_fig(self, **kwargs):
         """
         Save fig with specified name and format (post fix)
         :param output_name: output name, should include path if not sure
         :param output_format: output format, will be shown as a post fix
         :return: nothing for now..
         """
+        self.output_name = get_out_name_from_title(self.params["title"])
         for key, value in kwargs.items():
             if key in "output_format":
                 if value in "pdf":
                     self.output_format = "pdf"
             elif key in "output_dpi":
                 self.output_dpi = value
+            elif key in "output_name":
+                self.output_name = value
             else:
                 pass
-        self.fig.savefig(output_name + "." + self.output_format, format=self.output_format, dpi=self.output_dpi)
+        path_and_name = self.output_dir + "/" + self.output_name + "." + self.output_format
+        self.fig.savefig(path_and_name, format=self.output_format, dpi=self.output_dpi)
 
 
 color_base = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7']
+
+
+def get_out_name_from_title(title):
+    """
+    replace weird chars with _
+    """
+    out_name = title.lower()
+    out_name = out_name.replace("/", "_")
+    out_name = out_name.replace(" ", "_")
+    out_name = out_name.replace(":", "_")
+    out_name = out_name.replace("\"", "_")
+    out_name = out_name.replace("*", "_")
+    return out_name
 
 
 def get_args(argv):
