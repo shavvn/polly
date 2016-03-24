@@ -65,7 +65,7 @@ def plot(*args, **params):
         bar_2d = Bar2D(**params)
         bar_2d.plot()
         bar_2d.fig.show()
-        
+
 
 def plot_save(params, **kwargs):
     """
