@@ -22,7 +22,11 @@ class Polly(object):
         self.fig, self.ax = pyplot.subplots(1, 1)
         self.params = {
             "title": "Default Title",
-            "data": None,
+            "xlabel": "X Label",
+            "xticks": [],
+            "ylabel": "Y Label",
+            "yticks": [],
+            "data": [],
         }
         self.set_params(**kwargs)
         self.plot_type = "Default"

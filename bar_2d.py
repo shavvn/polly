@@ -4,18 +4,9 @@ import sys
 
 
 class Bar2D(polly.Polly):
-    def __init__(self, **kwargs):
-        super(Bar2D, self).__init__(**kwargs)
-        default_params = {
-            "xlabel": "X Label",
-            "xticks": "",
-            "ylabel": "Y Label",
-            "yticks": "",
-        }
-        for key in default_params:
-            if key not in self.params:
-                self.params.update({key: default_params[key]})
-
+    """
+    Feel like don't even need an init
+    """
     def parse_csv(self, csv_name):
         with open(csv_name, "r") as f:
             csv_reader = csv.reader(f)
