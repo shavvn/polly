@@ -36,8 +36,7 @@ class Polly(object):
     def set_params(self, **kwargs):
         # process kwargs
         for key, value in kwargs.items():
-            if key in self.params:
-                self.params.update({key: value})
+            self.params.update({key: value})
 
     def add_params(self, **kwargs):
         """

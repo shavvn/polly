@@ -9,9 +9,9 @@ class Bar2D(polly.Polly):
         super(Bar2D, self).__init__(**kwargs)
         default_params = {
             "xlabel": "X Label",
-            "xticks": None,
+            "xticks": "",
             "ylabel": "Y Label",
-            "yticks": None,
+            "yticks": "",
         }
         for key in default_params:
             if key not in self.params:
@@ -42,7 +42,6 @@ class Bar2D(polly.Polly):
         self.ax.bar(x_ticks, height=data, color=polly.color_base[1], align="center", edgecolor="none")
         self.ax.set_title(self.params["title"])
 
-
     def save_fig(self, output_name, output_format):
         """
         Save fig with specified name and format (post fix)
@@ -58,13 +57,48 @@ class Bar2D(polly.Polly):
             output_format = "png"
         self.fig.savefig(output_name+"."+output_format, format=output_format, dpi=self.output_dpi)
 
+    def plot_save(self, out_name, out_dir, graph_format):
+        self.plot()
+        self.save_fig(polly.gen_output_name(out_name, out_dir), graph_format)
+        self.fig.clear()
+
     def parse_plot_save(self, f_name, out_dir, graph_format):
         self.parse_csv(f_name)
-        self.plot()
-        self.save_fig(polly.gen_output_name(f_name, out_dir), graph_format)
-        self.fig.clear()
+        self.plot_save(f_name, out_dir, graph_format)
+
+
+def plot(params):
+    """
+    TODO: this still could be simplified by just passing data, let the program figure
+    out x and y
+    :param params: params, should have at least "data" set
+    :return:
+    """
+    bar_2d = Bar2D(**params)
+    bar_2d.plot()
+    bar_2d.fig.show()
+
+
+def plot_save(f_name, params, out_dir, format):
+    """
+    TODO for those out_dir, format which have default values, could pack it to **kwarg
+    :param f_name: name to be saved
+    :param params: params
+    :param out_dir: where to be saved
+    :param format: format to be saved
+    :return:
+    """
+    bar_2d = Bar2D(**params)
+    bar_2d.plot_save(f_name, out_dir, format)
+
+
+def parse_plot_save(csv_file, out_dir, format):
+    bar_2d = Bar2D()
+    bar_2d.parse_plot_save(csv_file, out_dir, format)
 
 
 if __name__ == "__main__":
     bar_2d = Bar2D()
-    bar_2d.parse_plot_save("examples/2d_bar_sample.csv", "examples/", "png")
+    params = bar_2d.parse_csv("examples/2d_bar_sample.csv")
+    plot(params)
+    # bar_2d.parse_plot_save("examples/2d_bar_sample.csv", "examples/", "png")
