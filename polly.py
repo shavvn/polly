@@ -25,8 +25,9 @@ class Polly(object):
         }
         self.plot_type = "Default"
         self.set_params(**kwargs)
-        self.output_dpi = 600
-        self.output_dir = "./"
+        self.output_dpi = 300
+        self.output_dir = "examples"+os.pathsep
+        self.output_format = "png"
 
     def get_params(self):
         return self.params
@@ -74,20 +75,22 @@ class Polly(object):
         self.ax.set_ylabel(self.params["ylabel"])
         # TODO maybe y and x should be handled differently but it's better to be consistent for 3d purposes...
 
-    def save_fig(self, output_name, output_format):
+    def save_fig(self, output_name, **kwargs):
         """
         Save fig with specified name and format (post fix)
         :param output_name: output name, should include path if not sure
         :param output_format: output format, will be shown as a post fix
         :return: nothing for now..
         """
-        if output_format == "pdf":
-            pass
-        elif output_format == "png":
-            self.output_dpi = 300
-        else:
-            output_format = "png"
-        self.fig.savefig(output_name + "." + output_format, format=output_format, dpi=self.output_dpi)
+        for key, value in kwargs.items():
+            if key in "output_format":
+                if value in "pdf":
+                    self.output_format = "pdf"
+            elif key in "output_dpi":
+                self.output_dpi = value
+            else:
+                pass
+        self.fig.savefig(output_name + "." + self.output_format, format=self.output_format, dpi=self.output_dpi)
 
 
 color_base = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7']

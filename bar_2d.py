@@ -18,7 +18,6 @@ class Bar2D(polly.Polly):
             if key not in self.params:
                 self.params.update({key: default_params[key]})
 
-
     def parse_csv(self, csv_name):
         with open(csv_name, "r") as f:
             csv_reader = csv.reader(f)
@@ -43,14 +42,15 @@ class Bar2D(polly.Polly):
         self.ax.bar(x_ticks, height=data, color=polly.color_base[1], align="center", edgecolor="none")
         self.ax.set_title(self.params["title"])
 
-    def plot_save(self, out_name, out_dir, graph_format):
+    def plot_save(self, output_name, **kwargs):
         self.plot()
-        self.save_fig(polly.gen_output_name(out_name, out_dir), graph_format)
+        self.save_fig(output_name, **kwargs)
         self.fig.clear()
 
     def parse_plot_save(self, f_name, out_dir, graph_format):
+        output_name = polly.gen_output_name(f_name, out_dir)
         self.parse_csv(f_name)
-        self.plot_save(f_name, out_dir, graph_format)
+        self.plot_save(output_name, output_format=graph_format)
 
 
 def plot(params):
