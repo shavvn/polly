@@ -1,27 +1,24 @@
 """
 This file saves some public APIs that the submodules may use.
-I once considered to do it in OOP way, back then it looked unnecessary so I just stopped doing
-it but instead tried to implement it in a very basic, function way. That's why you see the
-Polly class here and the bar.py in the project.
-But after I complete the 3rd submodule I realized I might switch back to OOP sometime...
-For the development of new submodules, I'll keep doing traditional way, but I'll also have
-another OOP branch trying to refector it to OOP...
+There should be 2 fundamentally different base classes: Polly and Polly 3D
+All sub-classes should all inherit from these 2 base classes
 """
 import os
 import argparse
 from abc import abstractmethod
+from matplotlib import pyplot
 
 
 class Polly(object):
     """
     A base class specify interfaces and do basic stuff such as init/set params
     """
-
     def __init__(self, **kwargs):
         """
         set default params and user defined ones
         """
         # have a list of default params, change them if necessary
+        self.fig, self.ax = pyplot.subplots(1, 1)
         self.params = {
             "title": "Default Title",
             "data": None,
@@ -29,6 +26,7 @@ class Polly(object):
         self.plot_type = "Default"
         self.set_params(**kwargs)
         self.output_dpi = 600
+        self.output_dir = "./"
 
     def get_params(self):
         return self.params
@@ -63,16 +61,6 @@ class Polly(object):
         """
         raise NotImplementedError("Subclass must implement abstract method")
 
-    @abstractmethod
-    def save_fig(self, output_name, output_format):
-        """
-        save fig as specified output name and format, should be different for 2d and 3d
-        :param output_name: output name, should include path
-        :param output_format: output format, pdf or png
-        :return: none for now...
-        """
-        raise NotImplementedError("Subclass must implement abstract method")
-
     def set_x_axis(self, ticks):
         self.ax.xaxis.set_label_position('bottom')
         self.ax.xaxis.set_ticks_position('bottom')
@@ -85,6 +73,21 @@ class Polly(object):
         self.ax.yaxis.set_ticks_position('left')
         self.ax.set_ylabel(self.params["ylabel"])
         # TODO maybe y and x should be handled differently but it's better to be consistent for 3d purposes...
+
+    def save_fig(self, output_name, output_format):
+        """
+        Save fig with specified name and format (post fix)
+        :param output_name: output name, should include path if not sure
+        :param output_format: output format, will be shown as a post fix
+        :return: nothing for now..
+        """
+        if output_format == "pdf":
+            pass
+        elif output_format == "png":
+            self.output_dpi = 300
+        else:
+            output_format = "png"
+        self.fig.savefig(output_name + "." + output_format, format=output_format, dpi=self.output_dpi)
 
 
 color_base = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7']

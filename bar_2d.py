@@ -2,7 +2,7 @@ import polly
 import csv
 import sys
 import numpy as np
-from matplotlib import pyplot
+
 
 
 class Bar2D(polly.Polly):
@@ -17,7 +17,7 @@ class Bar2D(polly.Polly):
         for key in default_params:
             if key not in self.params:
                 self.params.update({key: default_params[key]})
-        self.fig, self.ax = pyplot.subplots(1, 1)
+
 
     def parse_csv(self, csv_name):
         with open(csv_name, "r") as f:
@@ -42,21 +42,6 @@ class Bar2D(polly.Polly):
         self.ax.spines["right"].set_visible(False)
         self.ax.bar(x_ticks, height=data, color=polly.color_base[1], align="center", edgecolor="none")
         self.ax.set_title(self.params["title"])
-
-    def save_fig(self, output_name, output_format):
-        """
-        Save fig with specified name and format (post fix)
-        :param output_name: output name, should include path if not sure
-        :param output_format: output format, will be shown as a post fix
-        :return: nothing for now..
-        """
-        if output_format == "pdf":
-            pass
-        elif output_format == "png":
-            self.output_dpi = 300
-        else:
-            output_format = "png"
-        self.fig.savefig(output_name+"."+output_format, format=output_format, dpi=self.output_dpi)
 
     def plot_save(self, out_name, out_dir, graph_format):
         self.plot()
