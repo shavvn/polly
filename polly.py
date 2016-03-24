@@ -17,41 +17,26 @@ class Polly(object):
     A base class specify interfaces and do basic stuff such as init/set params
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, **kwargs):
         """
         set default params and user defined ones
-        :return: self.params
         """
         # have a list of default params, change them if necessary
         self.params = {
             "title": "Default Title",
-            "width": 0.4,
             "data": None,
         }
         self.plot_type = "Default"
-        self.set_params(args, kwargs)
+        self.set_params(**kwargs)
+        self.output_dpi = 600
 
     def get_params(self):
         return self.params
 
-    def set_params(self, *args, **kwargs):
-        if len(args) == 1:  # pass a file or data structure
-            if ".csv" in args:  # a csv file
-                self.parse_csv(args)
-            else:
-                if isinstance(args, dict):  # a dict instance
-                    for key, value in args.items():
-                        if key in self.params:
-                            self.params[key] = value
-        elif len(args) == 0:
-            pass
-        else:
-            print ("shouldn't have more than 1 args")
-            exit(1)
+    def set_params(self, **kwargs):
         # process kwargs
         for key, value in kwargs.items():
-            if key in self.params:
-                self.params[key] = value
+            self.params.update({key: value})
 
     def add_params(self, **kwargs):
         """
@@ -69,7 +54,7 @@ class Polly(object):
         :return: None
         """
         raise NotImplementedError("Subclass must implement abstract method")
-    
+
     @abstractmethod
     def parse_csv(self, file_name):
         """
@@ -77,6 +62,29 @@ class Polly(object):
         :return: params that could be used to plot
         """
         raise NotImplementedError("Subclass must implement abstract method")
+
+    @abstractmethod
+    def save_fig(self, output_name, output_format):
+        """
+        save fig as specified output name and format, should be different for 2d and 3d
+        :param output_name: output name, should include path
+        :param output_format: output format, pdf or png
+        :return: none for now...
+        """
+        raise NotImplementedError("Subclass must implement abstract method")
+
+    def set_x_axis(self, ticks):
+        self.ax.xaxis.set_label_position('bottom')
+        self.ax.xaxis.set_ticks_position('bottom')
+        self.ax.set_xlabel(self.params["xlabel"])
+        self.ax.set_xticks(ticks)
+        self.ax.set_xticklabels(self.params["xticks"], ha="center")
+
+    def set_y_axis(self):
+        self.ax.yaxis.set_label_position('left')
+        self.ax.yaxis.set_ticks_position('left')
+        self.ax.set_ylabel(self.params["ylabel"])
+        # TODO maybe y and x should be handled differently but it's better to be consistent for 3d purposes...
 
 
 color_base = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7']
