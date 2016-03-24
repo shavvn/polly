@@ -9,16 +9,16 @@ Polly is a wrapper package of matplotlib that can easily generate plots charts a
 
 To plot a 2D bar graph from a csv file, simply do
 ```
-python 2dbar.py --csv examples/2d_bar_sample.csv
+python bar_2d.py --csv examples/2d_bar.csv
 ```
 
 or you if you have your *axes* object and params ready in your program, you can use
 ```
-2dbar.plot(ax, params)
+bar_2d.plot(ax, params)
 ```
 
 The result is as follows:
-![2D Bar Sample](examples/2d_bar_sample.png)
+![2D Bar Sample](examples/2d_bar.png)
 
 ### Plot a 2D Stacked bar graph
 
