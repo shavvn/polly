@@ -41,10 +41,11 @@ def parse_csv(csv_name):
 def plot(ax, params):
     x_len = len(params["xticks"])
     y_len = len(params["yticks"])
-    xpos = y_len*range(x_len)  # It's not elegant but easy to repeat
-    ypos = x_len*range(y_len)
-    xpos = np.array(xpos)+0.25
-    ypos = np.array(ypos)+0.25
+    X, Y = np.meshgrid(np.arange(x_len), np.arange(y_len))
+    X = X.flatten() + 0.25
+    Y = Y.flatten() + 0.25
+    x_pos = np.arange(x_len)
+    y_pos = np.arange(y_len)
     zpos = np.zeros(x_len*y_len)
     data = params["data"]
     data = np.array(data)
@@ -53,13 +54,13 @@ def plot(ax, params):
     dy = dx.copy()
     colors = polly.color_base[0:x_len]
     colors *= y_len
-    ax.bar3d(xpos, ypos, zpos, dx, dy, data, color=colors, edgecolor="none", alpha=0.7)
+    ax.bar3d(X, Y, zpos, dx, dy, data, color=colors, edgecolor="none", alpha=0.7)
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
-    ax.set_xticks(xpos+0.25)
+    ax.set_xticks(x_pos+0.25)
     ax.set_xticklabels(params["xticks"], ha="center")
     ax.set_ylabel(params["ylabel"])
-    ax.set_yticks(ypos+0.25)
+    ax.set_yticks(y_pos+0.25)
     ax.set_yticklabels(params["yticks"], ha="center")
     ax.set_zlabel(params["zlabel"])
     return
@@ -67,6 +68,10 @@ def plot(ax, params):
 
 def parse_plot_save(f_name, out_dir, graph_format):
     params = parse_csv(f_name)
+    plot_save(f_name, params, out_dir, graph_format)
+
+
+def plot_save(f_name, params, out_dir, graph_format):
     fig = pyplot.figure()
     ax = fig.add_subplot(111, projection='3d')
     plot(ax, params)
