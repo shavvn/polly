@@ -51,22 +51,6 @@ class Polly(object):
         for key, value in kwargs.items():
             self.params[key] = value
 
-    @abstractmethod
-    def plot(self):
-        """
-        Abstract method, Subclass must implement this
-        :return: None
-        """
-        raise NotImplementedError("Subclass must implement abstract method")
-
-    @abstractmethod
-    def parse_csv(self, file_name):
-        """
-        :param file_name: the csv name to be parsed
-        :return: params that could be used to plot
-        """
-        raise NotImplementedError("Subclass must implement abstract method")
-
     def set_x_axis(self):
         """
         see if params[xticks] are set, if set, use it
@@ -82,14 +66,20 @@ class Polly(object):
             self.ax.set_xticks(ticks)
             self.ax.set_xticklabels(self.params["xticks"], ha="center")
         else:
-            data = self.params["data"][0]
-            if len(data) > 0:
+            data = self.params["data"]
+            if isinstance(data[0], list): # 2d data
+                if len(data) > 0:
+                    ticks = range(len(data[0]))
+                    ticklabels = map(str, ticks)
+                    self.ax.ax.set_xticks(ticks)
+                    self.ax.set_xticklabels(ticklabels, ha="center")
+                else:
+                    print "wtf..?"
+            else:  # 1d data
                 ticks = range(len(data))
                 ticklabels = map(str, ticks)
-                self.ax.ax.set_xticks(ticks)
+                self.ax.set_xticks(ticks)
                 self.ax.set_xticklabels(ticklabels, ha="center")
-            else:
-                print "wtf..?"
         return ticks
 
     def set_y_axis(self):
@@ -101,7 +91,7 @@ class Polly(object):
         self.ax.yaxis.set_label_position('left')
         self.ax.yaxis.set_ticks_position('left')
         self.ax.set_ylabel(self.params["ylabel"])
-        
+
     def save_fig(self, **kwargs):
         """
         Save fig with specified name and format (post fix)
@@ -122,6 +112,22 @@ class Polly(object):
                 pass
         path_and_name = self.output_dir + "/" + self.output_name + "." + self.output_format
         self.fig.savefig(path_and_name, format=self.output_format, dpi=self.output_dpi)
+
+    @abstractmethod
+    def plot(self):
+        """
+        Abstract method, Subclass must implement this
+        :return: None
+        """
+        raise NotImplementedError("Subclass must implement abstract method")
+
+    @abstractmethod
+    def parse_csv(self, file_name):
+        """
+        :param file_name: the csv name to be parsed
+        :return: params that could be used to plot
+        """
+        raise NotImplementedError("Subclass must implement abstract method")
 
 
 color_base = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7']
