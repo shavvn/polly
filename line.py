@@ -2,55 +2,64 @@ import csv
 import sys
 import numpy as np
 from matplotlib import pyplot
+from matplotlib import markers
 import polly
 
-y_1 = [[0.0003, 0.0053, 0.0863, 1.9041],
-       [0.0001, 0.0014, 0.0230, 0.3702],
-       [0.0001, 0.0006, 0.0054, 0.0713],
-       [0.0014, 0.0062, 0.0360, 0.3750],
-       [0.0000, 0.0000, 0.0004, 0.0109]]
-y_5 = [
-    [0, 0.1, 0.5, 3.4, 23.7, 210.2, 1673.3, 12420.3],
-    [0.0,  0.1,  1.0,  7.4, 58.8,  497.4, 3926.2, 30844.9],
-    [0.0,  0.1,  0.7,  4.8, 38.5,  305.6, 2451.5, 19303.4],
-    [0.0,  0.1,  0.5,  3.5, 28.8,  226.8, 1793.1, 14104.8],
-    [0.0,  0.1,  0.4,  3.2, 25.6,  199.9, 1543.1, 11913.1],
-    [0.0,  0.1,  0.4,  3.1, 25.1,  196.2, 1508.6, 11450.8],
-    [0.0,  0.1,  0.4,  3.0, 24.4,  190.3, 1503.2, 11308.4],
-    [0.0,  0.1,  0.3,  3.0, 24.1,  200.2, 1596.9, 11506.2],
-    [0.0,  0.1,  0.3,  2.3, 24.0,  203.7, 1621.1, 11917.6],
-]
 
-fig, ax = pyplot.subplots(1, 1)
 markers = [".", "s", "o", "x", "+", "d", ",", "v", "h"]
-x_ticks = np.arange(len(y_1[0]))
-x_tick_labels = ["64", "256", "1024", "4096"]
-x_title = "Matrix Size"
-y_title = "log10(Time)"
-legend_list = ["Access by rows",
-               "Access by columns",
-               "Vectorial colunm",
-               "Vectorial row",
-               "Matlab BLAS"]
-legend_list_5 = ["no block",
-                 "block=2",
-                 "block=4",
-                 "block=8",
-                 "block=16",
-                 "block=32",
-                 "block=64",
-                 "block=128",
-                 "block=256",]
-x_ticks_5 = np.arange(len(y_5[0]))
-x_tick_labels_5 = ["16", "32", "64", "128", "256", "512", "1024", "2048"]
-ax.set_xlabel(x_title)
-ax.set_xticks(x_ticks_5)
-ax.set_xticklabels(x_tick_labels_5)
-ax.set_ylabel(y_title)
-cnt = 0
-for y in y_5:
-    ax.plot(x_ticks_5, np.log10(y), linewidth=2, marker=markers[cnt])
-    cnt += 1
-ax.legend(legend_list_5, loc='best')
-fig.show()
-fig.clear()
+more_marker = markers.MarkerStyle.markers  # haven't fully tested yet, but worth a try
+
+def parse_csv(csv_name):
+    params = {}
+    with open(csv_name) as f:
+        csv_reader = csv.reader(f)
+        meta_info = csv_reader.next()
+        if meta_info:
+            params.update({"title": meta_info[0]})
+        x_meta = csv_reader.next()
+        params.update({"xlabel": x_meta[0]})
+        params.update({"xticks": x_meta[1:]})
+        y_labels = []
+        y_data = []
+        for row in csv.reader():
+            y_labels.append(row[0])
+            y_data.append(map(float, row[1:]))
+        params.update({"ylabels": y_labels})
+        params.update({"data": y_data})
+    return params
+    
+    
+def plot(ax, params):
+    data = params["data"]
+    ind = np.arange(len(params["xticks"]))
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.xaxis.set_label_position('bottom')
+    ax.xaxis.set_ticks_position('bottom')
+    ax.yaxis.set_label_position('left')
+    ax.yaxis.set_ticks_position('left')
+    cnt = 0
+    for row in data:
+        ax.plot(ind, data, linewidth=2, marker=markers[cnt])
+        cnt += 1
+    ax.legend(params["ylabels"], loc="best")
+    ax.set_title(params["title"])
+    ax.set_xlabel(params["xlabel"])
+    ax.set_xticks(ind)
+    ax.set_xticklabels(params["xticks"], ha="center")
+    ax.set_ylabel(params["ylabel"])
+    return
+
+    
+def parse_plot_save(f_name, out_dir, graph_format):
+    params = parse_csv(f_name)
+    fig, ax = pyplot.subplots(1, 1)
+    plot(ax, params)
+    polly.save_fig(fig, polly.gen_output_name(f_name, out_dir), graph_format)
+    fig.clear()
+
+if __name__ == "__main__":
+    file_list, out_dir, graph_format = polly.parse_argv(sys.argv[1:])  # first element is this file...
+    for each_file in file_list:
+        parse_plot_save(each_file, out_dir, graph_format)
+    print file_list
