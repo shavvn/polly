@@ -1,5 +1,6 @@
 import polly
 import csv
+import sys
 import numpy as np
 from matplotlib import pyplot
 
@@ -98,7 +99,6 @@ def parse_plot_save(csv_file, out_dir, format):
 
 
 if __name__ == "__main__":
-    bar_2d = Bar2D()
-    params = bar_2d.parse_csv("examples/2d_bar_sample.csv")
-    plot(params)
-    # bar_2d.parse_plot_save("examples/2d_bar_sample.csv", "examples/", "png")
+    file_list, out_dir, graph_format = polly.parse_argv(sys.argv[1:])
+    for each_file in file_list:
+        parse_plot_save(each_file, out_dir, graph_format)
