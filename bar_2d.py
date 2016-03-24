@@ -34,8 +34,7 @@ class Bar2D(polly.Polly):
 
     def plot(self):
         data = map(int, self.params["data"])
-        x_ticks = np.arange(len(self.params["xticks"]))
-        self.set_x_axis(x_ticks)
+        x_ticks = self.set_x_axis()
         self.set_y_axis()
         self.ax.spines["top"].set_visible(False)
         self.ax.spines["right"].set_visible(False)

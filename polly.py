@@ -33,7 +33,6 @@ class Polly(object):
         return self.params
 
     def set_params(self, **kwargs):
-        # process kwargs
         for key, value in kwargs.items():
             self.params.update({key: value})
 
@@ -62,19 +61,41 @@ class Polly(object):
         """
         raise NotImplementedError("Subclass must implement abstract method")
 
-    def set_x_axis(self, ticks):
+    def set_x_axis(self):
+        """
+        see if params[xticks] are set, if set, use it
+        if not, then infer xticks from data
+        :return: indices
+        """
+        ticks = self.params["xticks"]
         self.ax.xaxis.set_label_position('bottom')
         self.ax.xaxis.set_ticks_position('bottom')
         self.ax.set_xlabel(self.params["xlabel"])
-        self.ax.set_xticks(ticks)
-        self.ax.set_xticklabels(self.params["xticks"], ha="center")
+        if ticks:
+            ticks = range(len(ticks))
+            self.ax.set_xticks(ticks)
+            self.ax.set_xticklabels(self.params["xticks"], ha="center")
+        else:
+            data = self.params["data"][0]
+            if len(data) > 0:
+                ticks = range(len(data))
+                ticklabels = map(str, ticks)
+                self.ax.ax.set_xticks(ticks)
+                self.ax.set_xticklabels(ticklabels, ha="center")
+            else:
+                print "wtf..?"
+        return ticks
 
     def set_y_axis(self):
+        """
+        maybe for 2D graphs y axis should be left alone since
+        matplotlib has already handed things (like scale) pretty well
+        oh wait if it's a heatmap or scatter plot it's gotta be hanled
+        """
         self.ax.yaxis.set_label_position('left')
         self.ax.yaxis.set_ticks_position('left')
         self.ax.set_ylabel(self.params["ylabel"])
-        # TODO maybe y and x should be handled differently but it's better to be consistent for 3d purposes...
-
+        
     def save_fig(self, output_name, **kwargs):
         """
         Save fig with specified name and format (post fix)
