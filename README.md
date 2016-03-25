@@ -1,9 +1,8 @@
 # Polly
-Polly is a wrapper package of matplotlib that can easily generate plots charts and graphs. It could be used by academic writing and data visualization. 
+Polly is built on top of Matplotlib that can easily generate plots charts and graphs. It could be used by academic writing and data visualization. 
 
-## How to use it?
+## User Guide
 
-(currently only 2D bar and 2d stacked bar plot works, see examples)
 
 ### Plot a 2D bar graph
 
