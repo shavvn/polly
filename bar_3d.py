@@ -9,7 +9,6 @@ __author__ = "Shang Li"
 
 
 class Bar3D(polly.Polly3D):
-
     def parse_csv(self, csv_name):
         """
         There are something fundamentally different about 3d graph...
@@ -43,8 +42,8 @@ class Bar3D(polly.Polly3D):
         yticks = self.set_y_axis()
         yticks = np.array(yticks)
         x_pos, y_pos = np.meshgrid(xticks, yticks)
-        x_pos = x_pos.flatten() + 0.25
-        y_pos = y_pos.flatten() + 0.25
+        x_pos = x_pos.flatten() - 0.25
+        y_pos = y_pos.flatten() - 0.25
         z_pos = np.zeros(len(xticks)*len(yticks))
         data = self.params["data"]
         data = np.array(data)
@@ -54,9 +53,17 @@ class Bar3D(polly.Polly3D):
         colors = self.color_base[0:len(xticks)]
         colors *= len(yticks)
         self.ax.bar3d(x_pos, y_pos, z_pos, dx, dy, data, color=colors, edgecolor="none", alpha=0.8)
-        self.ax.set_xticks(xticks+0.25)
-        self.ax.set_yticks(yticks+0.25)
         self.ax.set_zlabel(self.params["zlabel"])
+        return
+
+    def plot_and_save(self, **output_kwargs):
+        self.plot()
+        self.save_fig(**output_kwargs)
+        self.fig.clear()
+
+    def parse_plot_save(self, csv_file, **output_kwargs):
+        self.parse_csv(csv_file)
+        self.plot_and_save(**output_kwargs)
         return
 
 
@@ -94,8 +101,8 @@ def plot(ax, params):
     x_len = len(params["xticks"])
     y_len = len(params["yticks"])
     xpos, ypos = np.meshgrid(np.arange(x_len), np.arange(y_len))
-    xpos = xpos.flatten() + 0.25
-    ypos = ypos.flatten() + 0.25
+    xpos = xpos.flatten() - 0.25
+    ypos = ypos.flatten() - 0.25
     xticks = np.arange(x_len)
     yticks = np.arange(y_len)
     zpos = np.zeros(x_len*y_len)
@@ -119,8 +126,12 @@ def plot(ax, params):
 
 
 def parse_plot_save(f_name, out_dir, graph_format):
-    params = parse_csv(f_name)
-    plot_save(f_name, params, out_dir, graph_format)
+    bar_3d = Bar3D()
+    kwargs = {
+        "output_dir": out_dir,
+        "output_format": graph_format
+    }
+    bar_3d.parse_plot_save(f_name, **kwargs)
 
 
 def plot_save(f_name, params, out_dir, graph_format):
@@ -139,8 +150,4 @@ def plot_save(f_name, params, out_dir, graph_format):
 if __name__ == "__main__":
     file_list, out_dir, graph_format = polly.parse_argv(sys.argv[1:])  # first element is this file...
     for each_file in file_list:
-        bar_3d = Bar3D()
-        bar_3d.parse_csv(each_file)
-        bar_3d.plot()
-        bar_3d.fig.show()
-        # parse_plot_save(each_file, out_dir, graph_format)
+        parse_plot_save(each_file, out_dir, graph_format)
