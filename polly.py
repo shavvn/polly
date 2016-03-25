@@ -92,8 +92,8 @@ class Polly(object):
         oh wait if it's a heatmap or scatter plot it's gotta be hanled
         """
         ticks = self.params["yticks"]
-        self.ax.yaxis.set_label_position('left')
-        self.ax.yaxis.set_ticks_position('left')
+        self.ax.yaxis.set_label_position('top')
+        self.ax.yaxis.set_ticks_position('top')
         self.ax.set_ylabel(self.params["ylabel"])
         if ticks:
             ticks = range(len(ticks))

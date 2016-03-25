@@ -139,4 +139,8 @@ def plot_save(f_name, params, out_dir, graph_format):
 if __name__ == "__main__":
     file_list, out_dir, graph_format = polly.parse_argv(sys.argv[1:])  # first element is this file...
     for each_file in file_list:
-        parse_plot_save(each_file, out_dir, graph_format)
+        bar_3d = Bar3D()
+        bar_3d.parse_csv(each_file)
+        bar_3d.plot()
+        bar_3d.fig.show()
+        # parse_plot_save(each_file, out_dir, graph_format)
