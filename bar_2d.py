@@ -58,7 +58,7 @@ def plot(*args, **params):
         bar_2d.fig.show()
 
 
-def plot_save(params, **kwargs):
+def plot_and_save(params, **kwargs):
     """
     :param params: params
     :param kwargs: output kwargs
