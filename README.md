@@ -39,7 +39,7 @@ The result is as follows:
 
 To plot a 3D bar graph from a csv file, simply do
 ```
-python 3dbar.py --csv examples/3d_bar_sample.csv
+python 3dbar.py --csv examples/3d_bar.csv
 ```
 
 or you if you have your *axes* object and params ready in your program, you can use
@@ -48,7 +48,7 @@ or you if you have your *axes* object and params ready in your program, you can 
 ```
 
 The result is as follows: (2 graphs of different angles will be generated so that you have the best view.
-![3D Bar Sample](examples/3d_bar_sample.png)
+![3D Bar Sample](examples/3d_bar_2.png)
 
 ### Plot a 3D Surface Graph
 
