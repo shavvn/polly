@@ -157,11 +157,12 @@ class Polly3D(Polly):
             "zlabel": "Z Label",
             "zticks": [],
         }
-        for key in default_3d_params:
+        for key, value in default_3d_params.iteritems():
             if key not in self.params:
-                self.params.update({key, default_3d_params[key]})
+                self.params.update({key: value})
         # this looks dump to me, is there a better way?
         self.fig.clear()
+        pyplot.close(self.fig)
         self.fig = pyplot.figure()
         self.ax = self.fig.add_subplot(111, projection='3d')
 
