@@ -8,6 +8,58 @@ import polly
 __author__ = "Shang Li"
 
 
+class Bar3D(polly.Polly3D):
+
+    def parse_csv(self, csv_name):
+        """
+        There are something fundamentally different about 3d graph...
+        xpos, ypos, zpos are starting point of a bar
+        dx, dy, dz are the dimension of a bar
+        :param csv_name:
+        :return:
+        """
+        with open(csv_name) as f:
+            csv_reader = csv.reader(f)
+            meta_info = csv_reader.next()
+            if meta_info:
+                self.params.update({"title": meta_info[0]})
+            x_meta = csv_reader.next()
+            self.params.update({"xlabel": x_meta[0]})
+            self.params.update({"xticks": x_meta[1:]})
+            y_meta = csv_reader.next()
+            self.params.update({"ylabel": y_meta[0]})
+            self.params.update({"yticks": y_meta[1:]})
+            z_meta = csv_reader.next()
+            self.params.update({"zlabel": z_meta[0]})
+            data = []
+            for line in csv_reader:
+                data.append(map(float, line))  # Convert to float instead of int
+                # TODO maybe throw an exception if cannot convert?
+            self.params.update({"data": data})
+
+    def plot(self):
+        x_pos = self.set_x_axis()
+        x_pos = np.array(x_pos)
+        y_pos = self.set_y_axis()
+        y_pos = np.array(y_pos)
+        X, Y = np.meshgrid(x_pos, y_pos)
+        X = X.flatten() + 0.25
+        Y = Y.flatten() + 0.25
+        z_pos = np.zeros(len(x_pos)*len(y_pos))
+        data = self.params["data"]
+        data = np.array(data)
+        data = data.flatten()
+        dx = 0.5*np.ones_like(z_pos)
+        dy = dx.copy()
+        colors = self.color_base[0:len(x_pos)]
+        colors *= len(y_pos)
+        self.ax.bar3d(X, Y, z_pos, dx, dy, data, color=colors, edgecolor="none", alpha=0.8)
+        self.ax.set_xticks(x_pos+0.25)
+        self.ax.set_yticks(y_pos+0.25)
+        self.ax.set_zlabel(self.params["zlabel"])
+        return
+
+
 def parse_csv(csv_name):
     """
     There are something fundamentally different about 3d graph...

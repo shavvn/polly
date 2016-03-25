@@ -7,6 +7,7 @@ import os
 import argparse
 from abc import abstractmethod
 from matplotlib import pyplot
+from mpl_toolkits.mplot3d import Axes3D
 
 
 class Polly(object):
@@ -14,6 +15,8 @@ class Polly(object):
     A base class specify interfaces and do basic stuff such as init/set params
     and fig ax handlers
     """
+    color_base = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7']
+
     def __init__(self, **kwargs):
         """
         set default params and user defined ones
@@ -67,8 +70,8 @@ class Polly(object):
             self.ax.set_xticklabels(self.params["xticks"], ha="center")
         else:
             data = self.params["data"]
-            if isinstance(data[0], list): # 2d data
-                if len(data) > 0:
+            if isinstance(data[0], list):  # 2d data
+                if len(data[0]) > 0:
                     ticks = range(len(data[0]))
                     ticklabels = map(str, ticks)
                     self.ax.ax.set_xticks(ticks)
@@ -88,15 +91,32 @@ class Polly(object):
         matplotlib has already handed things (like scale) pretty well
         oh wait if it's a heatmap or scatter plot it's gotta be hanled
         """
+        ticks = self.params["yticks"]
         self.ax.yaxis.set_label_position('left')
         self.ax.yaxis.set_ticks_position('left')
         self.ax.set_ylabel(self.params["ylabel"])
+        if ticks:
+            ticks = range(len(ticks))
+            self.ax.set_yticks(ticks)
+            self.ax.set_yticklabels(self.params["yticks"], va="center")
+        else:
+            data = self.params["data"]
+            if isinstance(data[0], list):  # 2d data, then only need to get len(data)
+                if len(data) > 0:
+                    ticks = range(len(data))
+                    ticklabels = map(str, ticks)
+                    self.ax.set_yticks(ticks)
+                    self.ax.set_yticklabels(ticklabels, va="center")
+                else:
+                    print "wtf..?"
+            else:  # for 1d data, then you can ignore this since matplotlib will handle that for you
+                pass
+        return ticks
 
     def save_fig(self, **kwargs):
         """
         Save fig with specified name and format (post fix)
-        :param output_name: output name, should include path if not sure
-        :param output_format: output format, will be shown as a post fix
+        :param kwargs: overwirte default values
         :return: nothing for now..
         """
         self.output_name = get_out_name_from_title(self.params["title"])
@@ -130,12 +150,45 @@ class Polly(object):
         raise NotImplementedError("Subclass must implement abstract method")
 
 
+class Polly3D(Polly):
+    def __init__(self, **kwargs):
+        super(Polly3D, self).__init__(**kwargs)
+        default_3d_params = {
+            "zlabel": "Z Label",
+            "zticks": [],
+        }
+        for key in default_3d_params:
+            if key not in self.params:
+                self.params.update({key, default_3d_params[key]})
+        # this looks dump to me, is there a better way?
+        self.fig.clear()
+        self.fig = pyplot.figure()
+        self.ax = self.fig.add_subplot(111, projection='3d')
+
+    @abstractmethod
+    def plot(self):
+        """
+        Abstract method, Subclass must implement this
+        :return: None
+        """
+        raise NotImplementedError("Subclass must implement abstract method")
+
+    @abstractmethod
+    def parse_csv(self, file_name):
+        """
+        :param file_name: the csv name to be parsed
+        :return: params that could be used to plot
+        """
+        raise NotImplementedError("Subclass must implement abstract method")
+
 color_base = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7']
 
 
 def get_out_name_from_title(title):
     """
     replace weird chars with _
+    :param title: title string
+    :return: legit output name string
     """
     out_name = title.lower()
     out_name = out_name.replace("/", "_")
