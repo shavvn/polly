@@ -27,7 +27,7 @@ class Bar2D(polly.Polly):
         self.set_y_axis()
         self.ax.spines["top"].set_visible(False)
         self.ax.spines["right"].set_visible(False)
-        self.ax.bar(x_ticks, height=data, color=polly.color_base[1], align="center", edgecolor="none")
+        self.ax.bar(x_ticks, height=data, color=self.color_base[1], align="center", edgecolor="none")
         self.ax.set_title(self.params["title"])
 
     def plot_and_save(self, **kwargs):
