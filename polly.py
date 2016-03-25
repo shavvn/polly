@@ -166,6 +166,31 @@ class Polly3D(Polly):
         self.fig = pyplot.figure()
         self.ax = self.fig.add_subplot(111, projection='3d')
 
+    def save_fig(self, **kwargs):
+        """
+        for 3D it's different, since it might block the view so by default I'll save 2 graphs
+        from 2 different angles
+        :param kwargs: overwirte default values
+        :return: nothing for now..
+        """
+        self.output_name = get_out_name_from_title(self.params["title"])
+        for key, value in kwargs.items():
+            if key in "output_format":
+                if value in "pdf":
+                    self.output_format = "pdf"
+            elif key in "output_dpi":
+                self.output_dpi = value
+            elif key in "output_name":
+                self.output_name = value
+            else:
+                pass
+        path_and_name = self.output_dir + "/" + self.output_name + "." + self.output_format
+        self.ax.view_init(30, 120)
+        self.fig.savefig(path_and_name, format=self.output_format, dpi=self.output_dpi)
+        path_and_name = self.output_dir + "/" + self.output_name + "_2" + "." + self.output_format
+        self.ax.view_init(30, 240)
+        self.fig.savefig(path_and_name, format=self.output_format, dpi=self.output_dpi)
+
     @abstractmethod
     def plot(self):
         """
