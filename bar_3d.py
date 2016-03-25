@@ -38,24 +38,24 @@ class Bar3D(polly.Polly3D):
             self.params.update({"data": data})
 
     def plot(self):
-        x_pos = self.set_x_axis()
-        x_pos = np.array(x_pos)
-        y_pos = self.set_y_axis()
-        y_pos = np.array(y_pos)
-        X, Y = np.meshgrid(x_pos, y_pos)
-        X = X.flatten() + 0.25
-        Y = Y.flatten() + 0.25
-        z_pos = np.zeros(len(x_pos)*len(y_pos))
+        xticks = self.set_x_axis()
+        xticks = np.array(xticks)
+        yticks = self.set_y_axis()
+        yticks = np.array(yticks)
+        x_pos, y_pos = np.meshgrid(xticks, yticks)
+        x_pos = x_pos.flatten() + 0.25
+        y_pos = y_pos.flatten() + 0.25
+        z_pos = np.zeros(len(xticks)*len(yticks))
         data = self.params["data"]
         data = np.array(data)
         data = data.flatten()
         dx = 0.5*np.ones_like(z_pos)
         dy = dx.copy()
-        colors = self.color_base[0:len(x_pos)]
-        colors *= len(y_pos)
-        self.ax.bar3d(X, Y, z_pos, dx, dy, data, color=colors, edgecolor="none", alpha=0.8)
-        self.ax.set_xticks(x_pos+0.25)
-        self.ax.set_yticks(y_pos+0.25)
+        colors = self.color_base[0:len(xticks)]
+        colors *= len(yticks)
+        self.ax.bar3d(x_pos, y_pos, z_pos, dx, dy, data, color=colors, edgecolor="none", alpha=0.8)
+        self.ax.set_xticks(xticks+0.25)
+        self.ax.set_yticks(yticks+0.25)
         self.ax.set_zlabel(self.params["zlabel"])
         return
 
@@ -93,11 +93,11 @@ def parse_csv(csv_name):
 def plot(ax, params):
     x_len = len(params["xticks"])
     y_len = len(params["yticks"])
-    X, Y = np.meshgrid(np.arange(x_len), np.arange(y_len))
-    X = X.flatten() + 0.25
-    Y = Y.flatten() + 0.25
-    x_pos = np.arange(x_len)
-    y_pos = np.arange(y_len)
+    xpos, ypos = np.meshgrid(np.arange(x_len), np.arange(y_len))
+    xpos = xpos.flatten() + 0.25
+    ypos = ypos.flatten() + 0.25
+    xticks = np.arange(x_len)
+    yticks = np.arange(y_len)
     zpos = np.zeros(x_len*y_len)
     data = params["data"]
     data = np.array(data)
@@ -106,13 +106,13 @@ def plot(ax, params):
     dy = dx.copy()
     colors = polly.color_base[0:x_len]
     colors *= y_len
-    ax.bar3d(X, Y, zpos, dx, dy, data, color=colors, edgecolor="none", alpha=0.7)
+    ax.bar3d(xpos, ypos, zpos, dx, dy, data, color=colors, edgecolor="none", alpha=0.7)
     ax.set_title(params["title"])
     ax.set_xlabel(params["xlabel"])
-    ax.set_xticks(x_pos+0.25)
+    ax.set_xticks(xticks+0.25)
     ax.set_xticklabels(params["xticks"], ha="center")
     ax.set_ylabel(params["ylabel"])
-    ax.set_yticks(y_pos+0.25)
+    ax.set_yticks(yticks+0.25)
     ax.set_yticklabels(params["yticks"], ha="center")
     ax.set_zlabel(params["zlabel"])
     return
