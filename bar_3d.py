@@ -54,16 +54,6 @@ class Bar3D(polly.Polly3D):
         self.ax.set_zlabel(self.params["zlabel"])
         return
 
-    def plot_and_save(self, **output_kwargs):
-        self.plot()
-        self.save_fig(**output_kwargs)
-        self.fig.clear()
-
-    def parse_plot_save(self, csv_file, **output_kwargs):
-        self.parse_csv(csv_file)
-        self.plot_and_save(**output_kwargs)
-        return
-
 
 def plot(*args, **params):
     if len(args) == 1:  # only support data for now

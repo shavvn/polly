@@ -30,15 +30,6 @@ class Bar2D(polly.Polly):
         self.ax.bar(x_ticks, height=data, color=self.color_base[1], align="center", edgecolor="none")
         self.ax.set_title(self.params["title"])
 
-    def plot_and_save(self, **kwargs):
-        self.plot()
-        self.save_fig(**kwargs)
-        self.fig.clear()
-
-    def parse_plot_save(self, f_name, **kwargs):
-        self.parse_csv(f_name)
-        self.plot_and_save(**kwargs)
-
 
 def plot(*args, **params):
     """
