@@ -9,82 +9,65 @@ import polly
 __author__ = "Shang Li"
 
 
-def parse_csv(csv_name):
-    """
-    There are something fundamentally different about 3d graph...
-    xpos, ypos, zpos are starting point of a bar
-    dx, dy, dz are the dimension of a bar
-    :param csv_name:
-    :return:
-    """
-    params = {}
-    with open(csv_name) as f:
-        csv_reader = csv.reader(f)
-        meta_info = csv_reader.next()
-        if meta_info:
-            params.update({"title": meta_info[0]})
-        x_meta = csv_reader.next()
-        params.update({"xlabel": x_meta[0]})
-        params.update({"xticks": x_meta[1:]})
-        # different from 3d bar, the xpos and ypos for 3d surface seemed to be an 2d array..
-        y_meta = csv_reader.next()
-        params.update({"ylabel": y_meta[0]})
-        params.update({"yticks": y_meta[1:]})
-        z_meta = csv_reader.next()
-        params.update({"zlabel": z_meta[0]})
-        data = []
-        for line in csv_reader:
-            data.append(map(float, line))  # Convert to float instead of int
-            # TODO maybe throw an exception if cannot convert?
-        params.update({"data": data})
-    return params
+class Surface3D(polly.Polly3D):
+    def parse_csv(self, csv_name):
+        with open(csv_name) as f:
+            csv_reader = csv.reader(f)
+            meta_info = csv_reader.next()
+            if meta_info:
+                self.params.update({"title": meta_info[0]})
+            x_meta = csv_reader.next()
+            self.params.update({"xlabel": x_meta[0]})
+            self.params.update({"xticks": x_meta[1:]})
+            y_meta = csv_reader.next()
+            self.params.update({"ylabel": y_meta[0]})
+            self.params.update({"yticks": y_meta[1:]})
+            z_meta = csv_reader.next()
+            self.params.update({"zlabel": z_meta[0]})
+            data = []
+            for line in csv_reader:
+                data.append(map(float, line))  # Convert to float instead of int
+            self.params.update({"data": data})
+        return self.params
+
+    def plot(self):
+        xticks = self.set_x_axis()
+        yticks = self.set_y_axis()
+        x_pos, y_pos = np.meshgrid(xticks, yticks)
+        data = self.params["data"]
+        data = np.array(data)
+        data = data.flatten()
+        z = data.reshape(x_pos.shape)  # this is different from 3d bar, should have the same shape.
+        self.ax.plot_surface(x_pos, y_pos, z, cmap=cm.coolwarm, rstride=1, cstride=1, linewidth=1)
+        self.ax.set_title(self.params["title"])
+        self.ax.set_zlabel(self.params["zlabel"])
+        return
 
 
-def plot(ax, params):
-    """
-    # this is more difficult than I anticipated... you first need to triangulate the data to 3D
-    # so that the data you pass to the plot_surface X, Y, Z are 2D arrays
-    # refered the link below and solved this probelm.
-    # http://stackoverflow.com/questions/9170838/surface-plots-in-matplotlib
-    :param ax:
-    :param params:
-    :return:
-    """
-    x_len = len(params["xticks"])
-    y_len = len(params["yticks"])
-    x = np.arange(0, x_len, 1)
-    y = np.arange(0, y_len, 1)
-    X, Y = np.meshgrid(x, y)
-    data = params["data"]
-    data = np.array(data)
-    data = data.flatten()
-    Z = data.reshape(X.shape)
-    # Z = data
-    ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, rstride=1, cstride=1, linewidth=1)
-    ax.set_title(params["title"])
-    ax.set_xlabel(params["xlabel"])
-    ax.set_xticks(x)
-    ax.set_xticklabels(params["xticks"], ha="center")
-    ax.set_ylabel(params["ylabel"])
-    ax.set_yticks(y)
-    ax.set_yticklabels(params["yticks"], ha="center")
-    ax.set_zlabel(params["zlabel"])
-    return
+def plot(*args, **params):
+    if len(args) == 1:  # only support data for now
+        if isinstance(args[0], list):
+            surface_3d = Surface3D(data=args[0])
+            surface_3d.plot()
+            surface_3d.fig.show()
+    else:
+        surface_3d = Surface3D(**params)
+        surface_3d.plot()
+        surface_3d.fig.show()
+
+
+def plot_and_save(params, **kwargs):
+    surface_3d = Surface3D(**params)
+    surface_3d.plot_and_save(**kwargs)
 
 
 def parse_plot_save(f_name, out_dir, graph_format):
-    params = parse_csv(f_name)
-    fig = pyplot.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    plot(ax, params)
-    # for 3d plots, save 2 figures from 120 and 240 angle to make sure everything is visible
-    ax.view_init(30, 120)
-    fig.show()
-    polly.save_fig(fig, polly.gen_output_name(f_name, out_dir), graph_format)
-    ax.view_init(30, 240)
-    out_name = polly.gen_output_name(f_name, out_dir) + "_2"
-    polly.save_fig(fig, out_name, graph_format)
-    fig.clear()
+    surface_3d = Surface3D()
+    kwargs = {
+        "output_dir": out_dir,
+        "output_format": graph_format
+    }
+    surface_3d.parse_plot_save(f_name, **kwargs)
 
 
 if __name__ == "__main__":
