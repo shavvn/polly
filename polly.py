@@ -4,9 +4,12 @@ There should be 2 fundamentally different base classes: Polly and Polly 3D
 All sub-classes should all inherit from these 2 base classes
 """
 import os
+import csv
 import argparse
+import numpy as np
 from abc import abstractmethod
 from matplotlib import pyplot
+from matplotlib import markers
 from mpl_toolkits.mplot3d import Axes3D
 
 
@@ -16,6 +19,7 @@ class Polly(object):
     and fig ax handlers
     """
     color_base = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7']
+    more_marker = markers.MarkerStyle.markers
 
     def __init__(self, **kwargs):
         """
@@ -58,12 +62,13 @@ class Polly(object):
         """
         see if params[xticks] are set, if set, use it
         if not, then infer xticks from data
+        TODO when there're many ticks it's hard to read
         :return: indices
         """
-        ticks = self.params["xticks"]
         self.ax.xaxis.set_label_position('bottom')
         self.ax.xaxis.set_ticks_position('bottom')
         self.ax.set_xlabel(self.params["xlabel"])
+        ticks = self.params["xticks"]
         if ticks:
             ticks = range(len(ticks))
             self.ax.set_xticks(ticks)
@@ -138,21 +143,36 @@ class Polly(object):
         path_and_name = self.output_dir + "/" + self.output_name + "." + self.output_format
         self.fig.savefig(path_and_name, format=self.output_format, dpi=self.output_dpi)
 
-    @abstractmethod
     def plot(self):
-        """
-        Abstract method, Subclass must implement this
-        :return: None
-        """
-        raise NotImplementedError("Subclass must implement abstract method")
+        data = self.params["data"]
+        xticks = self.set_x_axis()
+        self.ax.spines["top"].set_visible(False)
+        self.ax.spines["right"].set_visible(False)
+        cnt = 0
+        for row in data:
+            self.ax.plot(xticks, row, linewidth=2, marker=markers[cnt])
+            cnt += 1
+        self.ax.legend(self.params["labels"], loc="best")
+        self.ax.set_title(self.params["title"])
+        return
 
-    @abstractmethod
-    def parse_csv(self, file_name):
-        """
-        :param file_name: the csv name to be parsed
-        :return: params that could be used to plot
-        """
-        raise NotImplementedError("Subclass must implement abstract method")
+    def parse_csv(self, csv_name):
+        with open(csv_name) as f:
+            csv_reader = csv.reader(f)
+            meta_info = csv_reader.next()
+            if meta_info:
+                self.params.update({"title": meta_info[0]})
+            x_meta = csv_reader.next()
+            self.params.update({"xlabel": x_meta[0]})
+            self.params.update({"xticks": x_meta[1:]})
+            labels = []
+            y_data = []
+            for row in csv.reader():
+                labels.append(row[0])
+                y_data.append(map(float, row[1:]))
+            self.params.update({"labels": labels})
+            self.params.update({"data": y_data})
+        return self.params
 
     def plot_and_save(self, **kwargs):
         self.plot()
