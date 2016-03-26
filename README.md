@@ -23,7 +23,7 @@ The result is as follows:
 
 To plot a 2D bar graph from a csv file, simply do
 ```
-python 2d_stacked_bar.py --csv examples/2d_stacked_sample.csv
+python 2d_stacked_bar.py --csv examples/2d_stacked_bar.csv
 ```
 
 or you if you have your *axes* object and params ready in your program, you can use
@@ -32,7 +32,7 @@ or you if you have your *axes* object and params ready in your program, you can 
 ```
 
 The result is as follows:
-![2D Stacked Bar Sample](examples/2d_stacked_sample.png)
+![2D Stacked Bar Sample](examples/2d_stacked_bar.png)
 
 ### Plot a 3D Bar Graph
 
