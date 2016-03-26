@@ -87,13 +87,18 @@ class Polly(object):
 
     def set_y_axis(self):
         """
-        maybe for 2D graphs y axis should be left alone since
-        matplotlib has already handed things (like scale) pretty well
-        oh wait if it's a heatmap or scatter plot it's gotta be hanled
+        had to use 2 try/except to handle this since for 2d and 3d situations y axis
+        should be handled differently... but I'm just being lazy lol
         """
         ticks = self.params["yticks"]
-        self.ax.yaxis.set_label_position('top')
-        self.ax.yaxis.set_ticks_position('top')
+        try:
+            self.ax.yaxis.set_label_position('left')
+        except AssertionError:
+            self.ax.yaxis.set_label_position('bottom')
+        try:
+            self.ax.yaxis.set_ticks_position('left')
+        except ValueError:
+            self.ax.yaxis.set_ticks_position('bottom')
         self.ax.set_ylabel(self.params["ylabel"])
         if ticks:
             ticks = range(len(ticks))
@@ -148,6 +153,15 @@ class Polly(object):
         :return: params that could be used to plot
         """
         raise NotImplementedError("Subclass must implement abstract method")
+
+    def plot_and_save(self, **kwargs):
+        self.plot()
+        self.save_fig(**kwargs)
+        self.fig.clear()
+
+    def parse_plot_save(self, f_name, **kwargs):
+        self.parse_csv(f_name)
+        self.plot_and_save(**kwargs)
 
 
 class Polly3D(Polly):
