@@ -144,6 +144,10 @@ class Polly(object):
         self.fig.savefig(path_and_name, format=self.output_format, dpi=self.output_dpi)
 
     def plot(self):
+        """
+        This use to be an abstract function but then I decide to merge the line plotting
+        into the base class so it's easier. idk if it's good design practice...
+        """
         data = self.params["data"]
         xticks = self.set_x_axis()
         self.ax.spines["top"].set_visible(False)
@@ -154,7 +158,6 @@ class Polly(object):
             cnt += 1
         self.ax.legend(self.params["labels"], loc="best")
         self.ax.set_title(self.params["title"])
-        return
 
     def parse_csv(self, csv_name):
         with open(csv_name) as f:
@@ -240,8 +243,6 @@ class Polly3D(Polly):
         :return: params that could be used to plot
         """
         raise NotImplementedError("Subclass must implement abstract method")
-
-color_base = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7']
 
 
 def get_out_name_from_title(title):
