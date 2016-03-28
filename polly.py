@@ -5,6 +5,7 @@ All sub-classes should all inherit from these 2 base classes
 """
 import os
 import csv
+import sys
 import argparse
 import numpy as np
 from abc import abstractmethod
@@ -19,7 +20,31 @@ class Polly(object):
     and fig ax handlers
     """
     color_base = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7']
-    more_marker = markers.MarkerStyle.markers
+    more_markers = {  # this is a "hard copy" from matplotlib.markers.py ... a total of 23 markers
+        '.': 'point',
+        ',': 'pixel',
+        'o': 'circle',
+        'v': 'triangle_down',
+        '^': 'triangle_up',
+        '<': 'triangle_left',
+        '>': 'triangle_right',
+        '1': 'tri_down',
+        '2': 'tri_up',
+        '3': 'tri_left',
+        '4': 'tri_right',
+        '8': 'octagon',
+        's': 'square',
+        'p': 'pentagon',
+        '*': 'star',
+        'h': 'hexagon1',
+        'H': 'hexagon2',
+        '+': 'plus',
+        'x': 'x',
+        'D': 'diamond',
+        'd': 'thin_diamond',
+        '|': 'vline',
+        '_': 'hline',
+        }.keys()
 
     def __init__(self, **kwargs):
         """
@@ -154,7 +179,7 @@ class Polly(object):
         self.ax.spines["right"].set_visible(False)
         cnt = 0
         for row in data:
-            self.ax.plot(xticks, row, linewidth=2, marker=markers[cnt])
+            self.ax.plot(xticks, row, linewidth=2, marker=self.more_markers[cnt])
             cnt += 1
         self.ax.legend(self.params["labels"], loc="best")
         self.ax.set_title(self.params["title"])
@@ -170,7 +195,7 @@ class Polly(object):
             self.params.update({"xticks": x_meta[1:]})
             labels = []
             y_data = []
-            for row in csv.reader():
+            for row in csv_reader:
                 labels.append(row[0])
                 y_data.append(map(float, row[1:]))
             self.params.update({"labels": labels})
@@ -350,3 +375,34 @@ def save_fig(fig, output_name, output_format):
     else:
         output_format = "png"
     fig.savefig(output_name+"."+output_format, format=output_format, dpi=output_dpi)
+
+
+def plot(*args, **params):
+    if len(args) == 1:  # only support data for now
+        if isinstance(args[0], list):
+            line = Polly(data=args[0])
+            line.plot()
+            line.fig.show()
+    else:
+        line = Polly(**params)
+        line.plot()
+        line.fig.show()
+
+
+def plot_and_save(params, **kwargs):
+    line = Polly(**params)
+    line.plot_and_save(**kwargs)
+
+
+def parse_plot_save(f_name, out_dir, graph_format):
+    line = Polly()
+    kwargs = {
+        "output_dir": out_dir,
+        "output_format": graph_format
+    }
+    line.parse_plot_save(f_name, **kwargs)
+
+if __name__ == "__main__":
+    file_list, out_dir, graph_format = parse_argv(sys.argv[1:])  # first element is this file...
+    for each_file in file_list:
+        parse_plot_save(each_file, out_dir, graph_format)
