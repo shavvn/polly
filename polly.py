@@ -83,6 +83,55 @@ class Polly(object):
         for key, value in kwargs.items():
             self.params[key] = value
 
+    @classmethod
+    def get_data_dimension(cls, data):
+        """
+        get # of dimensions of data
+        :param data: data
+        :return: dimension, or 0 if not normal
+        """
+        if isinstance(data, list):
+            if isinstance(data[0], list):
+                if isinstance(data[0][0], list):
+                    print "sorry, no more than 2 dimensions.."
+                    return 3
+                else:  # 2d
+                    return 2
+            else:  # 1d
+                return 1
+        else:
+            print "data must be a list object"
+            return 0
+
+    @classmethod
+    def get_data(cls, data_in):
+        """
+        get data from params, figure out the dimension of the data and
+        get rid of units like 6ms->6
+        :param data_in: should be a list object
+        :return: "pure" data
+        """
+        data_dim = cls.get_data_dimension(data_in)
+        data = []
+        if data_dim == 1:
+            for d in data_in:  # go through one by one instead of using map() to handle corner case
+                try:
+                    data.append(float(d))
+                except ValueError:
+                    data.append(np.nan)
+        elif data_dim == 2:
+            for dd in data_in:
+                data_1d = []
+                for d in dd:
+                    try:
+                        data_1d.append(float(d))
+                    except ValueError:
+                        data_1d.append(np.nan)
+                data.append(data_1d)
+        else:
+            print "wrong data type!"
+        return data
+
     def set_x_axis(self):
         """
         see if params[xticks] are set, if set, use it
@@ -173,7 +222,7 @@ class Polly(object):
         This use to be an abstract function but then I decide to merge the line plotting
         into the base class so it's easier. idk if it's good design practice...
         """
-        data = self.params["data"]
+        data = self.get_data(self.params["data"])
         xticks = self.set_x_axis()
         self.ax.spines["top"].set_visible(False)
         self.ax.spines["right"].set_visible(False)
