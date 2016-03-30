@@ -22,7 +22,7 @@ class Bar2D(polly.Polly):
         return self.params
 
     def plot(self):
-        data = map(int, self.params["data"])
+        data = self.get_data(self.params["data"])
         x_ticks = self.set_x_axis()
         self.set_y_axis()
         self.ax.spines["top"].set_visible(False)

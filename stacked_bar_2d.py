@@ -30,7 +30,7 @@ class StackedBar2D(polly.Polly):
         self.set_y_axis()
         self.ax.spines["top"].set_visible(False)
         self.ax.spines["right"].set_visible(False)
-        data = self.params["data"]
+        data = self.get_data(self.params["data"])
         offset = [0]*len(data[0])
         handles = []  # TODO doesn't seem to need this handles?
         index = 0

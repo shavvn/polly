@@ -32,7 +32,7 @@ class Surface3D(polly.Polly3D):
         xticks = self.set_x_axis()
         yticks = self.set_y_axis()
         x_pos, y_pos = np.meshgrid(xticks, yticks)
-        data = self.params["data"]
+        data = self.get_data(self.params["data"])
         data = np.array(data)
         data = data.flatten()
         z = data.reshape(x_pos.shape)  # this is different from 3d bar, should have the same shape.

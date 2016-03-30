@@ -43,7 +43,7 @@ class Bar3D(polly.Polly3D):
         x_pos = x_pos.flatten() - 0.25
         y_pos = y_pos.flatten() - 0.25
         z_pos = np.zeros(len(xticks)*len(yticks))
-        data = self.params["data"]
+        data = self.get_data(self.params["data"])
         data = np.array(data)
         data = data.flatten()
         dx = 0.5*np.ones_like(z_pos)
