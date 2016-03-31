@@ -255,10 +255,12 @@ class Polly(object):
         self.plot()
         self.save_fig(**kwargs)
         self.fig.clear()
+        pyplot.close(self.fig)
 
     def parse_plot_save(self, f_name, **kwargs):
         self.parse_csv(f_name)
         self.plot_and_save(**kwargs)
+        pyplot.close(self.fig)
 
 
 class Polly3D(Polly):
@@ -293,6 +295,8 @@ class Polly3D(Polly):
                 self.output_dpi = value
             elif key in "output_name":
                 self.output_name = value
+            elif key in "output_dir":
+                self.output_dir = value
             else:
                 pass
         path_and_name = self.output_dir + "/" + self.output_name + "." + self.output_format
