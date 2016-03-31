@@ -35,6 +35,7 @@ class Bar3D(polly.Polly3D):
             self.params.update({"data": data})
 
     def plot(self):
+        self.ax.set_title(self.params["title"])
         xticks = self.set_x_axis()
         xticks = np.array(xticks)
         yticks = self.set_y_axis()
