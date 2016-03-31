@@ -11,12 +11,14 @@ To plot a 2D bar graph from a csv file, simply do
 python bar_2d.py --csv examples/2d_bar.csv
 ```
 
-or you if you have your *axes* object and params ready in your program, you can use
+or you can do it in your program as easy as:
 ```
-bar_2d.plot(ax, params)
+bar_2d.plot([58, 4, 1, 5, 13])
 ```
 
-The result is as follows:
+to get a quick preview and do whatever you want next.
+ 
+The result looks like:
 ![2D Bar Sample](examples/2d_bar.png)
 
 ### Plot a 2D Stacked bar graph
@@ -26,9 +28,11 @@ To plot a 2D bar graph from a csv file, simply do
 python 2d_stacked_bar.py --csv examples/2d_stacked_bar.csv
 ```
 
-or you if you have your *axes* object and params ready in your program, you can use
+or you can do it in your program as easy as:
 ```
-2d_stacked_bar.plot(ax, params)
+2d_stacked_bar.plot([[58, 70, 86, 115, 169],
+					  20, 50, 60, 70, 120],
+					  10, 10, 20, 30, 40]])
 ```
 
 The result is as follows:
@@ -43,7 +47,7 @@ python 3dbar.py --csv examples/3d_bar.csv
 
 or you if you have your *axes* object and params ready in your program, you can use
 ```
-2dbar.plot(ax, params)
+3dbar.plot(params)
 ```
 
 The result is as follows: (2 graphs of different angles will be generated so that you have the best view.
@@ -53,16 +57,16 @@ The result is as follows: (2 graphs of different angles will be generated so tha
 
 To plot a 3D surface graph from a csv file, simply do
 ```
-python 3dbar.py --csv examples/3d_surface_sample.csv
+python surface_3d.py --csv examples/3d_surface_sample.csv
 ```
 
 or you if you have your *axes* object and params ready in your program, you can use
 ```
-2dbar.plot(ax, params)
+surface_3d.plot(data)
 ```
 
 The result looks like: 
-![3D Surface Sample](examples/3d_surface_sample_2.png)
+![3D Surface Sample](examples/3d_surface_2.png)
 
 ### Others
 
