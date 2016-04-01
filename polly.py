@@ -93,14 +93,14 @@ class Polly(object):
         if isinstance(data, list):
             if isinstance(data[0], list):
                 if isinstance(data[0][0], list):
-                    print "sorry, no more than 2 dimensions.."
+                    logging.error("sorry, no more than 2 dimensional data!")
                     return 3
                 else:  # 2d
                     return 2
             else:  # 1d
                 return 1
         else:
-            print "data must be a list object"
+            logging.error("data must be a list object")
             return 0
 
     @classmethod
@@ -186,6 +186,7 @@ class Polly(object):
             self.ax.set_yticks(ticks)
             self.ax.set_yticklabels(self.params["yticks"], va="center")
         else:
+            logging.info("user didn't input yticks, creating from data...")
             data = self.params["data"]
             if isinstance(data[0], list):  # 2d data, then only need to get len(data)
                 if len(data) > 0:
@@ -343,14 +344,19 @@ def get_out_name_from_title(title):
 
 def get_args(argv):
     args_parser = argparse.ArgumentParser(description="take input to plot, either a file, or something else...")
-    args_parser.add_argument("--output_dir", help="output directory of all shit", default="./examples/")
-    args_parser.add_argument("--input_dir", help="input dir contains all csv files to be processed",
+    args_parser.add_argument("--output_dir",
+                             help="output directory of all shit",
+                             default="./examples/")
+    args_parser.add_argument("--input_dir",
+                             help="input dir contains all csv files to be processed",
                              default="./input/")
-    args_parser.add_argument("--list_file", help="input file contains list of file dir + names",
+    args_parser.add_argument("--list_file",
+                             help="input file contains list of file dir + names",
                              default="all_csv_files.txt")
-    args_parser.add_argument("--csv", nargs="*", help="the name(s) of the input csv file, needs to have same format as "
-                                                      "example")
-    args_parser.add_argument("--format", help="The output format of the graph, either pdf or png",
+    args_parser.add_argument("--csv", nargs="*",
+                             help="the names of the input csv files, needs to have same format as example")
+    args_parser.add_argument("--format",
+                             help="The output format of the graph, either pdf or png",
                              default="png", type=str, choices=["pdf", "png"])
     args_parser.add_argument("-pdf", help="set output format to pdf", action="store_true")
     args_parser.add_argument("-png", help="set output format to png", action="store_true")
@@ -370,6 +376,12 @@ def parse_argv(argv):
     f_list = []
     kwargs = {}
     args = get_args(argv)
+    if args.debug:
+        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.DEBUG)
+    if args.verbose:
+        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
+    else:
+        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.WARNING)
     if len(args.csv) > 0:
         f_list = args.csv
     elif args.input_dir:
@@ -391,6 +403,7 @@ def parse_argv(argv):
     if args.output_dir:
         kwargs["output_dir"] = args.output_dir
         if not os.path.exists(args.output_dir):
+            logging.info("output dir not exist, creating one for you...")
             os.mkdir(args.output_dir)
     if args.pdf:
         kwargs["output_format"] = "pdf"
@@ -398,12 +411,6 @@ def parse_argv(argv):
         kwargs["output_format"] = "png"
     else:
         kwargs["output_format"] = args.format
-    if args.debug:
-        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.DEBUG)
-    if args.verbose:
-        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
-    else:
-        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.WARNING)
     return f_list, kwargs
 
 
