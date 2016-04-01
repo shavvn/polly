@@ -3,6 +3,7 @@ This file saves some public APIs that the submodules may use.
 There should be 2 fundamentally different base classes: Polly and Polly 3D
 All sub-classes should all inherit from these 2 base classes
 """
+import logging
 import os
 import csv
 import sys
@@ -117,6 +118,7 @@ class Polly(object):
                 try:
                     data.append(float(d))
                 except ValueError:
+                    logging.warning("Data point cannot be converted to float!")
                     data.append(np.nan)
         elif data_dim == 2:
             for dd in data_in:
@@ -125,10 +127,11 @@ class Polly(object):
                     try:
                         data_1d.append(float(d))
                     except ValueError:
+                        logging.warning("Data point cannot be converted to float!")
                         data_1d.append(np.nan)
                 data.append(data_1d)
         else:
-            print "wrong data type!"
+            logging.error("Wrong data format! Refer examples to get correct data format!")
         return data
 
     def set_x_axis(self):
@@ -214,6 +217,7 @@ class Polly(object):
             else:
                 pass
         path_and_name = self.output_dir + "/" + self.output_name + "." + self.output_format
+        logging.info("saving figure as "+path_and_name)
         self.fig.savefig(path_and_name, format=self.output_format, dpi=self.output_dpi)
 
     def plot(self):
@@ -350,6 +354,8 @@ def get_args(argv):
                              default="png", type=str, choices=["pdf", "png"])
     args_parser.add_argument("-pdf", help="set output format to pdf", action="store_true")
     args_parser.add_argument("-png", help="set output format to png", action="store_true")
+    args_parser.add_argument("-v", "--verbose", help="output verbose", action="store_true")
+    args_parser.add_argument("-d", "--debug", help="whether to turn on debug", action="store_true")
     args = args_parser.parse_args(argv)
     return args
 
@@ -392,6 +398,12 @@ def parse_argv(argv):
         kwargs["output_format"] = "png"
     else:
         kwargs["output_format"] = args.format
+    if args.debug:
+        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.DEBUG)
+    if args.verbose:
+        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
+    else:
+        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.WARNING)
     return f_list, kwargs
 
 
