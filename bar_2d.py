@@ -59,17 +59,12 @@ def plot_and_save(params, **kwargs):
     bar_2d.plot_and_save(**kwargs)
 
 
-def parse_plot_save(csv_file, out_dir, format):
-    """
-    TODO only this needs to be changed along with the parse_argv function
-    """
+def parse_plot_save(csv_file, **kwargs):
     bar_2d = Bar2D()
-    kwargs = {"output_dir": out_dir,
-              "output_format": format}
     bar_2d.parse_plot_save(csv_file, **kwargs)
 
 
 if __name__ == "__main__":
-    file_list, out_dir, graph_format = polly.parse_argv(sys.argv[1:])
+    file_list, kwargs = polly.parse_argv(sys.argv[1:])
     for each_file in file_list:
-        parse_plot_save(each_file, out_dir, graph_format)
+        parse_plot_save(each_file, **kwargs)

@@ -10,7 +10,6 @@ import argparse
 import numpy as np
 from abc import abstractmethod
 from matplotlib import pyplot
-from matplotlib import markers
 from mpl_toolkits.mplot3d import Axes3D
 
 
@@ -346,7 +345,7 @@ def get_args(argv):
     args_parser.add_argument("--list_file", help="input file contains list of file dir + names",
                              default="all_csv_files.txt")
     args_parser.add_argument("--csv", nargs="*", help="the name(s) of the input csv file, needs to have same format as "
-                                                      "sample", default="2d_bar.csv")
+                                                      "example")
     args_parser.add_argument("--format", help="The output format of the graph, either pdf or png",
                              default="png", type=str, choices=["pdf", "png"])
     args_parser.add_argument("-pdf", help="set output format to pdf", action="store_true")
@@ -363,16 +362,16 @@ def parse_argv(argv):
             need to be stored, and format is in what format they neeed to be stored.
     """
     f_list = []
-    out_dir = "./output/"
+    kwargs = {}
     args = get_args(argv)
     if len(args.csv) > 0:
         f_list = args.csv
     elif args.input_dir:
         if os.path.exists(args.input_dir):
             all_files = os.listdir(args.input_dir)
-            for each_file in all_files:
-                if ".csv" in each_file:
-                    f_list.append(each_file)
+            for one_file in all_files:
+                if ".csv" in one_file:
+                    f_list.append(one_file)
         else:
             print "Input Dir doesn't exist!"
     elif args.list_file:
@@ -384,16 +383,16 @@ def parse_argv(argv):
     else:
         print "really? nothing input?"
     if args.output_dir:
-        out_dir = args.output_dir
+        kwargs["output_dir"] = args.output_dir
         if not os.path.exists(args.output_dir):
             os.mkdir(args.output_dir)
     if args.pdf:
-        graph_format = "pdf"
+        kwargs["output_format"] = "pdf"
     elif args.png:
-        graph_format = "png"
+        kwargs["output_format"] = "png"
     else:
-        graph_format = args.format
-    return f_list, out_dir, graph_format
+        kwargs["output_format"] = args.format
+    return f_list, kwargs
 
 
 def gen_output_name(input_name, out_dir):
@@ -447,15 +446,11 @@ def plot_and_save(params, **kwargs):
     line.plot_and_save(**kwargs)
 
 
-def parse_plot_save(f_name, out_dir, graph_format):
+def parse_plot_save(f_name, **kwargs):
     line = Polly()
-    kwargs = {
-        "output_dir": out_dir,
-        "output_format": graph_format
-    }
     line.parse_plot_save(f_name, **kwargs)
 
 if __name__ == "__main__":
-    file_list, out_dir, graph_format = parse_argv(sys.argv[1:])  # first element is this file...
+    file_list, kwargs = parse_argv(sys.argv[1:])  # first element is this file...
     for each_file in file_list:
-        parse_plot_save(each_file, out_dir, graph_format)
+        parse_plot_save(each_file, **kwargs)

@@ -66,15 +66,11 @@ def plot_and_save(params, **kwargs):
     stacked_bar.plot_and_save(**kwargs)
 
 
-def parse_plot_save(f_name, out_dir, graph_format):
+def parse_plot_save(f_name, **kwargs):
     stacked_bar = StackedBar2D()
-    kwargs = {
-        "output_dir": out_dir,
-        "output_format": graph_format
-    }
     stacked_bar.parse_plot_save(f_name, **kwargs)
 
 if __name__ == "__main__":
-    file_list, out_dir, graph_format = polly.parse_argv(sys.argv[1:])  # first element is this file...
+    file_list, kwargs = polly.parse_argv(sys.argv[1:])  # first element is this file...
     for each_file in file_list:
-        parse_plot_save(each_file, out_dir, graph_format)
+        parse_plot_save(each_file, **kwargs)
