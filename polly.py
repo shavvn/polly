@@ -19,8 +19,10 @@ class Polly(object):
     A base class specify interfaces and do basic stuff such as init/set params
     and fig ax handlers
     """
-    color_base = ['#E69F00', '#56B4E9', '#009E73', '#F0E442', '#0072B2', '#D55E00', '#CC79A7']
-    more_markers = {  # this is a "hard copy" from matplotlib.markers.py ... a total of 23 markers
+    color_base = ['#E69F00', '#56B4E9', '#009E73',
+                  '#F0E442', '#0072B2', '#D55E00', '#CC79A7']
+    more_markers = {  # this is a "hard copy" from matplotlib.markers.py ...
+                      # a total of 23 markers
         '.': 'point',
         ',': 'pixel',
         'o': 'circle',
@@ -114,7 +116,8 @@ class Polly(object):
         data_dim = cls.get_data_dimension(data_in)
         data = []
         if data_dim == 1:
-            for d in data_in:  # go through one by one instead of using map() to handle corner case
+            for d in data_in:  # go through one by one instead of using map()
+                # to handle corner case
                 try:
                     data.append(float(d))
                 except ValueError:
@@ -132,6 +135,7 @@ class Polly(object):
                 data.append(data_1d)
         else:
             logging.error("Wrong data format! Refer examples to get correct data format!")
+            sys.exit()
         return data
 
     def set_x_axis(self):
@@ -151,19 +155,18 @@ class Polly(object):
             self.ax.set_xticklabels(self.params["xticks"], ha="center")
         else:
             data = self.params["data"]
-            if isinstance(data[0], list):  # 2d data
-                if len(data[0]) > 0:
-                    ticks = range(len(data[0]))
-                    ticklabels = map(str, ticks)
-                    self.ax.ax.set_xticks(ticks)
-                    self.ax.set_xticklabels(ticklabels, ha="center")
-                else:
-                    print "wtf..?"
-            else:  # 1d data
+            dim = self.get_data_dimension(data)
+            if dim == 2:
+                ticks = range(len(data[0]))
+                ticklabels = map(str, ticks)
+            elif dim == 1:
                 ticks = range(len(data))
                 ticklabels = map(str, ticks)
-                self.ax.set_xticks(ticks)
-                self.ax.set_xticklabels(ticklabels, ha="center")
+            else:
+                logging.error("Input data dimension not supported!")
+                sys.exit()
+            self.ax.set_xticks(ticks)
+            self.ax.set_xticklabels(ticklabels, ha="center")
         return ticks
 
     def set_y_axis(self):
@@ -188,16 +191,18 @@ class Polly(object):
         else:
             logging.info("user didn't input yticks, creating from data...")
             data = self.params["data"]
-            if isinstance(data[0], list):  # 2d data, then only need to get len(data)
-                if len(data) > 0:
-                    ticks = range(len(data))
-                    ticklabels = map(str, ticks)
-                    self.ax.set_yticks(ticks)
-                    self.ax.set_yticklabels(ticklabels, va="center")
-                else:
-                    print "wtf..?"
-            else:  # for 1d data, then you can ignore this since matplotlib will handle that for you
-                pass
+            dim = self.get_data_dimension(data)
+            if dim == 2:
+                ticks = range(len(data))
+                ticklabels = map(str, ticks)
+            elif dim == 1:  # I guess you could still pass 1d data to plot 3d graph...
+                ticks = range(len(data))
+                ticklabels = map(str, ticks)
+            else:
+                logging.error("Input data dimension not supported!")
+                sys.exit()
+            self.ax.set_yticks(ticks)
+            self.ax.set_yticklabels(ticklabels, va="center")
         return ticks
 
     def save_fig(self, **kwargs):
@@ -306,7 +311,7 @@ class Polly3D(Polly):
         path_and_name = self.output_dir + "/" + self.output_name + "." + self.output_format
         self.ax.view_init(30, 120)
         self.fig.savefig(path_and_name, format=self.output_format, dpi=self.output_dpi)
-        path_and_name = self.output_dir + "/" + self.output_name + "_2" + "." + self.output_format
+        path_and_name = self.output_dir + "/" + self.output_name + "_2." + self.output_format
         self.ax.view_init(30, 240)
         self.fig.savefig(path_and_name, format=self.output_format, dpi=self.output_dpi)
 
