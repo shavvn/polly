@@ -342,8 +342,9 @@ def get_out_name_from_title(title):
     return out_name
 
 
-def get_args(argv):
-    args_parser = argparse.ArgumentParser(description="take input to plot, either a file, or something else...")
+def add_argv_parser():
+    args_parser = argparse.ArgumentParser(description="take input to plot, "
+                                                      "either a file, or something else...")
     args_parser.add_argument("--output_dir",
                              help="output directory of all shit",
                              default="./examples/")
@@ -354,16 +355,20 @@ def get_args(argv):
                              help="input file contains list of file dir + names",
                              default="all_csv_files.txt")
     args_parser.add_argument("--csv", nargs="*",
-                             help="the names of the input csv files, needs to have same format as example")
+                             help="the names of the input csv files, "
+                                  "needs to have same format as example")
     args_parser.add_argument("--format",
                              help="The output format of the graph, either pdf or png",
                              default="png", type=str, choices=["pdf", "png"])
-    args_parser.add_argument("-pdf", help="set output format to pdf", action="store_true")
-    args_parser.add_argument("-png", help="set output format to png", action="store_true")
-    args_parser.add_argument("-v", "--verbose", help="output verbose", action="store_true")
-    args_parser.add_argument("-d", "--debug", help="whether to turn on debug", action="store_true")
-    args = args_parser.parse_args(argv)
-    return args
+    args_parser.add_argument("-pdf", help="set output format to pdf",
+                             action="store_true")
+    args_parser.add_argument("-png", help="set output format to png",
+                             action="store_true")
+    args_parser.add_argument("-v", "--verbose", help="output verbose",
+                             action="store_true")
+    args_parser.add_argument("-d", "--debug", help="whether to turn on debug",
+                             action="store_true")
+    return args_parser
 
 
 def parse_argv(argv):
@@ -375,7 +380,8 @@ def parse_argv(argv):
     """
     f_list = []
     kwargs = {}
-    args = get_args(argv)
+    argv_parser = add_argv_parser()
+    args = argv_parser.parse_args(argv)
     if args.debug:
         logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.DEBUG)
     if args.verbose:
@@ -470,6 +476,6 @@ def parse_plot_save(f_name, **kwargs):
     line.parse_plot_save(f_name, **kwargs)
 
 if __name__ == "__main__":
-    file_list, kwargs = parse_argv(sys.argv[1:])  # first element is this file...
+    file_list, kwargs = parse_argv(sys.argv[1:])
     for each_file in file_list:
         parse_plot_save(each_file, **kwargs)
