@@ -392,23 +392,15 @@ def add_argv_parser():
     return args_parser
 
 
-def parse_argv(argv):
+def get_file_list(args):
     """
-    take argv as input, parse it and return usable data structures
-    :param argv:
-    :return: file_list a list of files need to be parsed, output dir is where they
-            need to be stored, and format is in what format they neeed to be stored.
+    get input files to be processing from args, either csv file(s),
+    or a file containing a list of file names to be processed
+    or an input dir containing all files to be processed
+    :param args: should use the parser add_argv_parser generated
+    :return: a list of file names to be processed
     """
     f_list = []
-    kwargs = {}
-    argv_parser = add_argv_parser()
-    args = argv_parser.parse_args(argv)
-    if args.debug:
-        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.DEBUG)
-    if args.verbose:
-        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
-    else:
-        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.WARNING)
     if len(args.csv) > 0:
         f_list = args.csv
     elif args.input_dir:
@@ -418,15 +410,38 @@ def parse_argv(argv):
                 if ".csv" in one_file:
                     f_list.append(one_file)
         else:
-            print "Input Dir doesn't exist!"
+            logging.error("Input dir doesn't exist!")
+            sys.exit()
     elif args.list_file:
         if os.path.isfile(args.list_file):
             for line in open(args.list_file, "r"):
                 f_list.append(line.rstrip())  # rstrip get rids of end of line
         else:
-            print "Input List File doesn't exist!"
+            logging.error("Input file doesn't exist!")
+            sys.exit()
     else:
-        print "really? nothing input?"
+        logging.error("Must have some input...")
+        sys.exit()
+    return f_list
+
+
+def parse_argv(argv):
+    """
+    take argv as input, parse it and return usable data structures
+    :param argv:
+    :return: file_list a list of files need to be parsed, output dir is where they
+            need to be stored, and format is in what format they neeed to be stored.
+    """
+    argv_parser = add_argv_parser()
+    args = argv_parser.parse_args(argv)
+    if args.debug:
+        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.DEBUG)
+    if args.verbose:
+        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
+    else:
+        logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.WARNING)
+    f_list = get_file_list(args)
+    kwargs = {}
     if args.output_dir:
         kwargs["output_dir"] = args.output_dir
         if not os.path.exists(args.output_dir):
