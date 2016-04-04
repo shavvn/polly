@@ -64,6 +64,7 @@ class Polly(object):
         }
         self.set_params(**kwargs)
         self.plot_type = "Default"
+        self._dimension = 2
         self.output_dpi = 300
         self.output_dir = "examples/"
         self.output_name = get_out_name_from_title(self.params["title"])
@@ -194,14 +195,17 @@ class Polly(object):
             self.ax.set_yticklabels(self.params["yticks"], va="center")
         else:
             logging.info("user didn't input yticks, creating from data...")
-            data = self.params["data"]
-            dim = self.get_data_dimension(data)
-            if dim == 2:
-                ticks = range(len(data))
-                ticklabels = map(str, ticks)
-                self.ax.set_yticks(ticks)
-                self.ax.set_yticklabels(ticklabels, va="center")
-            elif dim == 1:  # matplotlib will figure it out for you...
+            if self._dimension == 3:
+                data = self.params["data"]
+                dim = self.get_data_dimension(data)
+                if dim == 2:
+                    ticks = range(len(data))
+                    ticklabels = map(str, ticks)
+                    self.ax.set_yticks(ticks)
+                    self.ax.set_yticklabels(ticklabels, va="center")
+                else:  # passed a 1d data to a 3d plot? no!
+                    logging.error("Please don't pass 1D data to 3D graph..")
+            elif self._dimension == 2:  # matplotlib will figure it out for you...
                 pass
             else:
                 logging.error("Input data dimension not supported!")
@@ -286,11 +290,12 @@ class Polly3D(Polly):
         for key, value in default_3d_params.iteritems():
             if key not in self.params:
                 self.params.update({key: value})
-        # this looks dump to me, is there a better way?
+        # close figure generate by 2d, this looks dump to me, is there a better way?
         self.fig.clear()
         pyplot.close(self.fig)
         self.fig = pyplot.figure()
         self.ax = self.fig.add_subplot(111, projection='3d')
+        self._dimension = 3
 
     def save_fig(self, **kwargs):
         """
