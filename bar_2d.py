@@ -18,7 +18,7 @@ class Bar2D(polly.Polly):
             self.params.update({"xticks": x_meta[1:]})
             y_meta = csv_reader.next()
             self.params.update({"ylabel": y_meta[0]})
-            data = self.map_data(y_meta[1:])
+            data = self.map_list_to_float(y_meta[1:])
             self.params.update({"data": data})
         return self.params
 

@@ -106,7 +106,7 @@ class Polly(object):
             return 0
 
     @classmethod
-    def map_data(cls, data_in):
+    def map_list_to_float(cls, data_in):
         """
         map a List into a float type, put a nan if cannot convert
         :param data_in: must be list type
@@ -132,10 +132,10 @@ class Polly(object):
         data_dim = cls.get_data_dimension(data_in)
         data = []
         if data_dim == 1:
-            data = cls.map_data(data_in)
+            data = cls.map_list_to_float(data_in)
         elif data_dim == 2:
             for dd in data_in:
-                data_1d = cls.map_data(dd)
+                data_1d = cls.map_list_to_float(dd)
                 data.append(data_1d)
         else:
             logging.error("Wrong data format! Refer examples to get correct data format!")
@@ -199,14 +199,14 @@ class Polly(object):
             if dim == 2:
                 ticks = range(len(data))
                 ticklabels = map(str, ticks)
-            elif dim == 1:  # I guess you could still pass 1d data to plot 3d graph...
-                ticks = range(len(data))
-                ticklabels = map(str, ticks)
+                self.ax.set_yticks(ticks)
+                self.ax.set_yticklabels(ticklabels, va="center")
+            elif dim == 1:  # matplotlib will figure it out for you...
+                pass
             else:
                 logging.error("Input data dimension not supported!")
                 sys.exit()
-            self.ax.set_yticks(ticks)
-            self.ax.set_yticklabels(ticklabels, va="center")
+
         return ticks
 
     def save_fig(self, **kwargs):
@@ -259,7 +259,7 @@ class Polly(object):
             y_data = []
             for row in csv_reader:
                 labels.append(row[0])
-                y_data.append(self.map_data(row[1:]))
+                y_data.append(self.map_list_to_float(row[1:]))
             self.params.update({"labels": labels})
             self.params.update({"data": y_data})
         return self.params
