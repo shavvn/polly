@@ -30,8 +30,7 @@ class Bar3D(polly.Polly3D):
             self.params.update({"zlabel": z_meta[0]})
             data = []
             for line in csv_reader:
-                data.append(map(float, line))  # Convert to float instead of int
-                # TODO maybe throw an exception if cannot convert?
+                data.append(self.map_data(line))  # Convert to float instead of int
             self.params.update({"data": data})
 
     def plot(self):

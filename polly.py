@@ -106,32 +106,36 @@ class Polly(object):
             return 0
 
     @classmethod
+    def map_data(cls, data_in):
+        """
+        map a List into a float type, put a nan if cannot convert
+        :param data_in: must be list type
+        :return: list of float data
+        """
+        data = []
+        for d in data_in:
+            try:
+                data.append(float(d))
+            except ValueError:
+                logging.warning("Data point cannot be converted to float!")
+                data.append(np.nan)
+        return data
+
+    @classmethod
     def get_data(cls, data_in):
         """
         get data from params, figure out the dimension of the data and
-        get rid of units like 6ms->6
+        TODO: get rid of units like 6ms->6
         :param data_in: should be a list object
         :return: "pure" data
         """
         data_dim = cls.get_data_dimension(data_in)
         data = []
         if data_dim == 1:
-            for d in data_in:  # go through one by one instead of using map()
-                # to handle corner case
-                try:
-                    data.append(float(d))
-                except ValueError:
-                    logging.warning("Data point cannot be converted to float!")
-                    data.append(np.nan)
+            data = cls.map_data(data_in)
         elif data_dim == 2:
             for dd in data_in:
-                data_1d = []
-                for d in dd:
-                    try:
-                        data_1d.append(float(d))
-                    except ValueError:
-                        logging.warning("Data point cannot be converted to float!")
-                        data_1d.append(np.nan)
+                data_1d = cls.map_data(dd)
                 data.append(data_1d)
         else:
             logging.error("Wrong data format! Refer examples to get correct data format!")
@@ -255,7 +259,7 @@ class Polly(object):
             y_data = []
             for row in csv_reader:
                 labels.append(row[0])
-                y_data.append(map(float, row[1:]))
+                y_data.append(self.map_data(row[1:]))
             self.params.update({"labels": labels})
             self.params.update({"data": y_data})
         return self.params

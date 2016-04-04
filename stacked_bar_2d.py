@@ -21,7 +21,7 @@ class StackedBar2D(polly.Polly):
             stacks = []
             for line in csv_reader:
                 stacks.append(line[0])
-                data.append(map(float, line[1:]))  # Convert to float instead of int
+                data.append(self.map_data(line[1:]))  # Convert to float instead of int
             self.params.update({"data": data})
             self.params.update({"stacks": stacks})
             
