@@ -244,9 +244,13 @@ class Polly(object):
         self.ax.spines["top"].set_visible(False)
         self.ax.spines["right"].set_visible(False)
         cnt = 0
-        for row in data:
-            self.ax.plot(xticks, row, linewidth=2, marker=self.more_markers[cnt])
-            cnt += 1
+        dim = self.get_data_dimension(data)
+        if dim > 1:
+            for row in data:
+                self.ax.plot(xticks, row, linewidth=2, marker=self.more_markers[cnt])
+                cnt += 1
+        else:
+            self.ax.plot(xticks, data, linewidth=2, marker=self.more_markers[cnt])
         self.ax.legend(self.params["labels"], loc="best")
         self.ax.set_title(self.params["title"])
 
@@ -466,11 +470,17 @@ def parse_argv(argv):
 
 
 def plot(*args, **params):
-    if len(args) == 1:  # only support data for now
+    if len(args) == 1:  # y only
+        logging.info("only y is given")
         if isinstance(args[0], list):
             line = Polly(data=args[0])
             line.plot()
             line.fig.show()
+    elif len(args) == 2:  # x and y
+        logging.info("x and y are both given")
+        line = Polly(xticks=args[0], data=args[1])
+        line.plot()
+        line.fig.show()
     else:
         line = Polly(**params)
         line.plot()
@@ -490,3 +500,4 @@ if __name__ == "__main__":
     file_list, kwargs = parse_argv(sys.argv[1:])
     for each_file in file_list:
         parse_plot_save(each_file, **kwargs)
+    plot([1, 2, 3], [10, 20, 30])
