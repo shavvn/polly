@@ -210,8 +210,11 @@ class Polly(object):
             else:
                 logging.error("Input data dimension not supported!")
                 sys.exit()
-
         return ticks
+
+    def set_legends(self):
+        if "labels" in self.params:
+            self.ax.legend(self.params["labels"], loc="best")
 
     def save_fig(self, **kwargs):
         """
@@ -251,7 +254,7 @@ class Polly(object):
                 cnt += 1
         else:
             self.ax.plot(xticks, data, linewidth=2, marker=self.more_markers[cnt])
-        self.ax.legend(self.params["labels"], loc="best")
+        self.set_legends()
         self.ax.set_title(self.params["title"])
 
     def parse_csv(self, csv_name):
@@ -470,21 +473,23 @@ def parse_argv(argv):
 
 
 def plot(*args, **params):
+    """
+    This is different from the plot in Polly
+    This is intended to provide quick view of a plot like pyplot.plot interface
+    :param args: y[] or x[], y[]
+    :param params:
+    :return:
+    """
     if len(args) == 1:  # y only
         logging.info("only y is given")
-        if isinstance(args[0], list):
-            line = Polly(data=args[0])
-            line.plot()
-            line.fig.show()
+        line = Polly(data=args[0])
     elif len(args) == 2:  # x and y
         logging.info("x and y are both given")
         line = Polly(xticks=args[0], data=args[1])
-        line.plot()
-        line.fig.show()
     else:
         line = Polly(**params)
-        line.plot()
-        line.fig.show()
+    line.plot()
+    line.fig.show()
 
 
 def plot_and_save(params, **kwargs):
@@ -500,4 +505,3 @@ if __name__ == "__main__":
     file_list, kwargs = parse_argv(sys.argv[1:])
     for each_file in file_list:
         parse_plot_save(each_file, **kwargs)
-    plot([1, 2, 3], [10, 20, 30])
