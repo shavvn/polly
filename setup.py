@@ -12,7 +12,7 @@ setup(name="polly",
         "matplotlib",
       ],
       classifiers=[
-        "Development Status :: 0 ...",
+        "Development Status :: 0 dev release",
         "Programming Language :: Python :: 2.7",
         "Topic:: Data visualization"
       ],
