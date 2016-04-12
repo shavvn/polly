@@ -10,5 +10,11 @@ setup(name="polly",
       install_requires= [
         "numpy",
         "matplotlib",
-      ]
+      ],
+      classifiers=[
+        "Development Status :: 0 ...",
+        "Programming Language :: Python :: 2.7",
+        "Topic:: Data visualization"
+      ],
+      keywords="Data visualization, matplotlib"
       )
