@@ -67,7 +67,7 @@ class Polly(object):
         self._dimension = 2
         self.output_dpi = 300
         self.output_dir = "./"
-        self.output_name = get_out_name_from_title(self.params["title"])
+        self.output_name = "figure"
         self.output_format = "png"
         self.path_and_name = self.output_dir + "/" + self.output_name + "." + self.output_format
 
@@ -229,7 +229,7 @@ class Polly(object):
         if output_dir is None:
             output_dir = self.output_dir
         if output_name is None:
-            output_name = self.output_name
+            output_name = get_out_name_from_title(self.params["title"])
         if output_format is None:
             output_format = self.output_format
         if output_dpi is None:
@@ -264,6 +264,7 @@ class Polly(object):
             meta_info = csv_reader.next()
             if meta_info:
                 self.params.update({"title": meta_info[0]})
+
             x_meta = csv_reader.next()
             self.params.update({"xlabel": x_meta[0]})
             self.params.update({"xticks": x_meta[1:]})
