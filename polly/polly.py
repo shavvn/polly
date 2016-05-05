@@ -66,9 +66,10 @@ class Polly(object):
         self.plot_type = "Default"
         self._dimension = 2
         self.output_dpi = 300
-        self.output_dir = "examples/"
+        self.output_dir = "./"
         self.output_name = get_out_name_from_title(self.params["title"])
         self.output_format = "png"
+        self.path_and_name = self.output_dir + "/" + self.output_name + "." + self.output_format
 
     def get_params(self):
         return self.params
@@ -216,26 +217,26 @@ class Polly(object):
         if "labels" in self.params:
             self.ax.legend(self.params["labels"], loc="best")
 
-    def save_fig(self, **kwargs):
+    def save_fig(self, output_dir=None, output_name=None, output_format=None, output_dpi=None):
         """
-        Save fig with specified name and format (post fix)
-        :param kwargs: overwirte default values
+        Save fig with specified name and format, if not specified, use default value
+        :param output_dir: output dir
+        :param output_name: output name, should not include extension (for now)
+        :param output_format: output format
+        :param output_dpi: output dpi
         :return: nothing for now..
         """
-        self.output_name = get_out_name_from_title(self.params["title"])
-        for key, value in kwargs.items():
-            if key in "output_format":
-                if value in "pdf":
-                    self.output_format = "pdf"
-            elif key in "output_dpi":
-                self.output_dpi = value
-            elif key in "output_name":
-                self.output_name = value
-            else:
-                pass
-        path_and_name = self.output_dir + "/" + self.output_name + "." + self.output_format
-        logging.info("saving figure as "+path_and_name)
-        self.fig.savefig(path_and_name, format=self.output_format, dpi=self.output_dpi)
+        if output_dir is None:
+            output_dir = self.output_dir
+        if output_name is None:
+            output_name = self.output_name
+        if output_format is None:
+            output_format = self.output_format
+        if output_dpi is None:
+            output_dpi = self.output_dpi
+        output_name = output_dir + "/" + output_name + "." + output_format
+        logging.info("saving figure as "+output_name)
+        self.fig.savefig(output_name, format=output_format, dpi=output_dpi)
 
     def plot(self):
         """
@@ -275,15 +276,9 @@ class Polly(object):
             self.params.update({"data": y_data})
         return self.params
 
-    def plot_and_save(self, **kwargs):
-        self.plot()
-        self.save_fig(**kwargs)
-        self.fig.clear()
-        pyplot.close(self.fig)
-
-    def parse_plot_save(self, f_name, **kwargs):
+    def parse_plot_save(self, f_name, output_name=None, output_format=None, output_dpi=None):
         self.parse_csv(f_name)
-        self.plot_and_save(**kwargs)
+        self.plot_and_save(output_name, output_format, output_dpi)
         pyplot.close(self.fig)
 
 
@@ -492,14 +487,11 @@ def plot(*args, **params):
     line.fig.show()
 
 
-def plot_and_save(params, **kwargs):
-    line = Polly(**params)
-    line.plot_and_save(**kwargs)
-
-
-def parse_plot_save(f_name, **kwargs):
+def parse_plot_save(f_name, output_dir=None, output_name=None, output_format=None, output_dpi=None):
     line = Polly()
-    line.parse_plot_save(f_name, **kwargs)
+    line.parse_csv(f_name)
+    line.plot()
+    line.save_fig(output_dir, output_name, output_format, output_dpi)
 
 if __name__ == "__main__":
     file_list, kwargs = parse_argv(sys.argv[1:])
