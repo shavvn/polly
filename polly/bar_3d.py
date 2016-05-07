@@ -69,7 +69,8 @@ def plot(*args, **params):
 
 def plot_and_save(params, **kwargs):
     bar_3d = Bar3D(**params)
-    bar_3d.plot_and_save(**kwargs)
+    bar_3d.plot()
+    bar_3d.save_fig(**kwargs)
 
 
 def parse_plot_save(f_name, **kwargs):
