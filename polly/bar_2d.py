@@ -1,6 +1,7 @@
 import polly
 import csv
 import sys
+import util
 
 
 class Bar2D(polly.Polly):
@@ -67,6 +68,6 @@ def parse_plot_save(csv_file, **kwargs):
 
 
 if __name__ == "__main__":
-    file_list, kwargs = polly.parse_argv(sys.argv[1:])
+    file_list, kwargs = util.parse_argv(sys.argv[1:])
     for each_file in file_list:
         parse_plot_save(each_file, **kwargs)

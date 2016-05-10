@@ -1,5 +1,6 @@
 import csv
 import sys
+import util
 import numpy as np
 import polly
 
@@ -79,6 +80,6 @@ def parse_plot_save(f_name, **kwargs):
 
 
 if __name__ == "__main__":
-    file_list, kwargs = polly.parse_argv(sys.argv[1:])  # first element is this file...
+    file_list, kwargs = util.parse_argv(sys.argv[1:])  # first element is this file...
     for each_file in file_list:
         parse_plot_save(each_file, **kwargs)
