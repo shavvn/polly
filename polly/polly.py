@@ -278,9 +278,10 @@ class Polly(object):
             self.params.update({"data": y_data})
         return self.params
 
-    def parse_plot_save(self, f_name, output_name=None, output_format=None, output_dpi=None):
+    def parse_plot_save(self, f_name, output_dir=None, output_name=None, output_format=None, output_dpi=None,):
         self.parse_csv(f_name)
-        self.plot_and_save(output_name, output_format, output_dpi)
+        self.plot()
+        self.save_fig(output_dir, output_name, output_format, output_dpi)
         pyplot.close(self.fig)
 
 
