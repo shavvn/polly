@@ -56,7 +56,8 @@ def plot(*args, **params):
 
 def plot_and_save(params, **kwargs):
     surface_3d = Surface3D(**params)
-    surface_3d.plot_and_save(**kwargs)
+    surface_3d.plot()
+    surface_3d.save_fig(**kwargs)
 
 
 def parse_plot_save(f_name, **kwargs):

@@ -57,7 +57,8 @@ def plot_and_save(params, **kwargs):
     :return:
     """
     bar_2d = Bar2D(**params)
-    bar_2d.plot_and_save(**kwargs)
+    bar_2d.plot()
+    bar_2d.save_fig(**kwargs)
 
 
 def parse_plot_save(csv_file, **kwargs):
