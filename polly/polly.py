@@ -4,11 +4,9 @@ There should be 2 fundamentally different base classes: Polly and Polly 3D
 All sub-classes should all inherit from these 2 base classes
 """
 import logging
-import os
 import csv
 import sys
 import util
-import argparse
 import numpy as np
 from abc import abstractmethod
 from matplotlib import pyplot
