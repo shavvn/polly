@@ -63,7 +63,8 @@ def plot(*args, **params):
 
 def plot_and_save(params, **kwargs):
     stacked_bar = StackedBar2D(**params)
-    stacked_bar.plot_and_save(**kwargs)
+    stacked_bar.plot()
+    stacked_bar.save_fig(**kwargs)
 
 
 def parse_plot_save(f_name, **kwargs):
