@@ -487,6 +487,11 @@ def plot(*args, **params):
     line.plot()
     line.fig.show()
 
+def plot_and_save(params, **kwargs):
+    line = Polly(**params)
+    line.plot()
+    line.save_fig(**kwargs)
+    
 
 def parse_plot_save(f_name, output_dir=None, output_name=None, output_format=None, output_dpi=None):
     line = Polly()
